@@ -101,8 +101,9 @@ int main() {
 	Clock clock;
 	float dt = 70;
 	const float VISION_ANGLE = 120; 
-	float angle = - (VISION_ANGLE / 2), countDontSeePlayer = 0;
+	float angle = -(VISION_ANGLE / 2), countDontSeePlayer = 0, countDontSeeSolid = 0;
 	bool seeYa = false, barrier = false;
+	int dVec = 10;
 	while (window.isOpen()) {
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
@@ -156,47 +157,128 @@ int main() {
 				}
 
 				// Зрение врага
-				rect.left = enemy->x; rect.top = enemy->y; rect.width = 500; rect.height = 2;// (enemy->x, enemy->y, 300, 2);
-				sh.setSize(sf::Vector2f(rect.width, rect.height));
-				sh.setFillColor(Color(255, 255, 255));
-				sh.setPosition(rect.left, rect.top);
 
+				rect.left = enemy->x; rect.top = enemy->y; 
+				rect.width = 500;
+				rect.height = 2;
+				sh.setFillColor(Color(255, 255, 255));
+				sh.setSize(sf::Vector2f(rect.width, rect.height));
+				sh.setPosition(rect.left + 10, rect.top);
 				sh.setRotation(enemy->sprite.getRotation() + angle);
-				if (sh.getGlobalBounds().intersects(player.getRect()) && player.life) {
-					seeYa = true; 
-					float minSolidDistance = 2 ^ 1000;
+				/*
+				// Пересечение вектора взгляда с игроком
+				/*bool rase = true;
+				float vec_w = dVec;
+				while(rase && vec_w < 500) {
+					rect.width = vec_w;
+					sh.setSize(sf::Vector2f(rect.width, rect.height));
+					if (sh.getGlobalBounds().intersects(player.getRect())) {
+						if (barrier) {
+							seeYa = true;
+							rase = false;
+						}
+						else {
+							seeYa = true;
+						}
+					}
+					// Проходим по солидам
 					for (const auto& solid : lvl.GetObjects("solid")) {
 						sf::FloatRect solidRect(solid.getAABB().left, solid.getAABB().top, solid.getAABB().width, solid.getAABB().height);
+						// Пересечение вектора взгляда с препятствием
+						if (sh.getGlobalBounds().intersects(solidRect)) {
+							if (seeYa) {
+								barrier = false;
+								rase = false;
+							}
+							else {
+								barrier = true;
+								rase = false;
+							}
+						}
+					}
+					vec_w += dVec;
+				}*/
+				
+				/*
+				float destToPlayer = 0, minSolidDistance = 1000;
+				if (sh.getGlobalBounds().intersects(player.getRect()) && player.life) {
+					seeYa = true; 
+					// Проходим по всем солидам
+					for (const auto& solid : lvl.GetObjects("solid")) {
+						sf::FloatRect solidRect(solid.getAABB().left, solid.getAABB().top, solid.getAABB().width, solid.getAABB().height);
+						// Пересечение вектора взгляда с препятствием
 						if (sh.getGlobalBounds().intersects(solidRect)) {
 							float destToSolid = getDistance(enemy->x, enemy->y, solid.getAABB().left, solid.getAABB().top);
 							if (destToSolid < minSolidDistance)
 								minSolidDistance = destToSolid;
 						}
 					}
-					float destToPlayer = getDistance(enemy->x, enemy->y, player.x, player.y);
+					destToPlayer = getDistance(enemy->x, enemy->y, player.x, player.y);
 					if (minSolidDistance < destToPlayer) {
 						barrier = true;
+					}
+					else {
+						countDontSeeSolid++;
 					}
 				}
 				else {
 					countDontSeePlayer++;
 				}
-				if (countDontSeePlayer == VISION_ANGLE) { seeYa = false; countDontSeePlayer = 0; barrier = false;
+				if (countDontSeePlayer == VISION_ANGLE) { 
+					seeYa = false; 
+					countDontSeePlayer = 0; 
+					barrier = false;
 				}
+				if (countDontSeeSolid == VISION_ANGLE) { countDontSeeSolid = 0; barrier = false; }
+				if (!seeYa) barrier = false;
+				//if (seeYa)
+				//	cout << seeYa << " " << barrier << " " << destToPlayer << " " << minSolidDistance << endl;
+				*/
+				
+				if (sh.getGlobalBounds().intersects(player.getRect())) {
+					sf::FloatRect particle; particle.width = 5; particle.height = 5;
+					particle.left = sh.getPosition().x;
+					particle.top = sh.getPosition().y;
+					float distance = sqrt((player.x - particle.left) * (player.x - particle.left) + (player.y - particle.top) * (player.y - particle.top));
+					float vx = (player.x - particle.left) / distance;
+					float vy = (player.y - particle.top) / distance;
+					barrier = false;
+					seeYa = true;
+					while (!particle.intersects(player.getRect())) {
+						particle.left += vx * 5;
+						particle.top += vy * 5;
+
+						for (const auto& solid : lvl.GetObjects("solid")) {
+							sf::FloatRect solidRect(solid.getAABB().left, solid.getAABB().top, solid.getAABB().width, solid.getAABB().height);
+							// Пересечение вектора взгляда с препятствием
+							if (particle.intersects(solidRect)) {
+								barrier = true;
+							}
+						}
+					}
+				} else {
+					countDontSeePlayer++;
+				}
+				if (countDontSeePlayer == VISION_ANGLE) {
+					seeYa = false;
+					countDontSeePlayer = 0;
+					barrier = false;
+				}
+				cout << seeYa << " " << barrier << endl;
 				// Противник идет на игрока
-				if (!barrier && seeYa) {
+				if (!barrier && seeYa && player.life) {
 					enemy->isMove = true;
 					enemy->goToCoords(player.x, player.y, time);
 					if (!enemy->isShoot) {
-						bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
-						enemy->shoot();
-						shootSound.play();
+						//bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
+						//enemy->shoot();
+						//shootSound.play();
 					}
 				}
 				// Противник идет по заданному пути
-				if (!seeYa || barrier) {
+				if (!seeYa || barrier || !player.life) {
 					enemy->isMove = true;
-					enemy->go(time);
+					enemy->goThePath(time);
 				}
 				if (angle >= 60) { angle = -60; countDontSeePlayer = 0; }
 				angle++;
@@ -225,15 +307,15 @@ int main() {
 				window.draw(enemy->legsSprite);
 			window.draw(enemy->sprite);
 			
-			//window.draw(sh);
+			window.draw(sh);
 		}
 		if (player.life)
 			window.draw(player.legsSprite);
 		window.draw(player.sprite);
 		drawList(it, bullets, window);
 		window.draw(aim.sprite);
-
 		window.display();
+		//Sleep(5);
 	}
 	return 0;
 }

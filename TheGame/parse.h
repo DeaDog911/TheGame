@@ -70,7 +70,7 @@ void parse(std::string path) {
                 std::cout << "Found " << objects.size() << " objects in layer" << std::endl;
                 for (const auto& object : objects)
                 {
-                    std::cout << "Object " << object.getUID() << ", name: " << object.getName() << " , type: " << object.getType() << ", " << object.getPosition().x << " " << object.getPosition().y << std::endl;
+                    std::cout << "Object " << object.getUID() << ", name: " << object.getName() << " , type: " << object.getType() << ", l:" << object.getAABB().left << " t:" << object.getAABB().top << std::endl;
                     const auto& properties = object.getProperties();
                     std::cout << "Object has " << properties.size() << " properties" << std::endl;
                     for (const auto& prop : properties)

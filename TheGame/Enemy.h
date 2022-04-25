@@ -20,7 +20,7 @@ public:
 		}
 	}
 
-	void go(float time) {
+	void goThePath(float time) {
 		float tempX = tracks[trackId].getPosition().x;
 		float tempY = tracks[trackId].getPosition().y;
 		move(tempX, tempY, time);
