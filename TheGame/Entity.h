@@ -42,8 +42,17 @@ public:
 		sprite.setRotation(rotation);
 	}
 
-	sf::FloatRect getRect() {//ф-ция получения прямоугольника. его коорд,размеры (шир,высот).
-		return sf::FloatRect(x, y, width, height);//эта ф-ция нужна для проверки столкновений 
+	sf::FloatRect getRect() {
+		sf::FloatRect rect(x, y, width, height);
+		return rect;
+	}
+
+	sf::FloatRect getLeftSide() {
+		return sf::FloatRect(x + width / 2, y, width, height / 2);
+	}
+
+	sf::FloatRect getRightSide() {
+		return sf::FloatRect(x + width / 2, y, width, height / 2);
 	}
 
 	virtual void update(float time) = 0;

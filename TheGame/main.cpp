@@ -4,6 +4,8 @@
 #include <list>
 #include "view.h"
 #include <cmath>
+#include <vector>
+#include <climits>
 
 #include <tmxlite/Map.hpp>
 #include <tmxlite/Layer.hpp>
@@ -18,6 +20,8 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "consts.h"
+#include "Pathfinding.h"
 
 using namespace std;
 using namespace sf;
@@ -56,11 +60,22 @@ float getDistance(float tempX, float tempY, float x, float y) {
 }
 
 int main() {
-	parse("map.tmx");
+	int** grid = new int* [MAP_H];
+	for (int i = 0; i < MAP_H; i++) {
+		grid[i] = new int[MAP_W];
+	}
+
+	for (int i = 0; i < MAP_H; i++) {
+		for (int j = 0; j < MAP_W; j++) {
+			grid[i][j] = -1;
+		}
+	}
+
+	//parse("map.tmx");
 	RenderWindow window(VideoMode(1380, 720), "Game");
 	window.setMouseCursorVisible(false);
 	view.reset(sf::FloatRect(0, 0, 1380, 720));
-
+	
 	Level lvl("map.tmx");
 	MapLayer layer0(lvl.map, 0);
 	MapLayer layer1(lvl.map, 1);
@@ -104,6 +119,12 @@ int main() {
 	float angle = -(VISION_ANGLE / 2), countDontSeePlayer = 0, countDontSeeSolid = 0;
 	bool seeYa = false, barrier = false;
 	int dVec = 10;
+
+	vector<Object> solids = lvl.GetObjects("solid");
+	put_solids(grid, solids);
+	vector<pair<int, int>> path;
+	vector<pair<int, int> >::iterator path_i;
+
 	while (window.isOpen()) {
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
@@ -127,6 +148,7 @@ int main() {
 				}
 			}
 		}
+
 		sf::FloatRect rect;
 		sf::RectangleShape sh;
 		int i = 0;
@@ -152,12 +174,12 @@ int main() {
 						}
 					}
 				}
+
 				if (enemy->getRect().intersects(player.getRect()) && player.life) {
 					player.stopInFront(enemy->getRect(), player.speedX, player.speedY);
 				}
 
 				// Зрение врага
-
 				rect.left = enemy->x; rect.top = enemy->y; 
 				rect.width = 500;
 				rect.height = 2;
@@ -165,76 +187,8 @@ int main() {
 				sh.setSize(sf::Vector2f(rect.width, rect.height));
 				sh.setPosition(rect.left + 10, rect.top);
 				sh.setRotation(enemy->sprite.getRotation() + angle);
-				/*
+
 				// Пересечение вектора взгляда с игроком
-				/*bool rase = true;
-				float vec_w = dVec;
-				while(rase && vec_w < 500) {
-					rect.width = vec_w;
-					sh.setSize(sf::Vector2f(rect.width, rect.height));
-					if (sh.getGlobalBounds().intersects(player.getRect())) {
-						if (barrier) {
-							seeYa = true;
-							rase = false;
-						}
-						else {
-							seeYa = true;
-						}
-					}
-					// Проходим по солидам
-					for (const auto& solid : lvl.GetObjects("solid")) {
-						sf::FloatRect solidRect(solid.getAABB().left, solid.getAABB().top, solid.getAABB().width, solid.getAABB().height);
-						// Пересечение вектора взгляда с препятствием
-						if (sh.getGlobalBounds().intersects(solidRect)) {
-							if (seeYa) {
-								barrier = false;
-								rase = false;
-							}
-							else {
-								barrier = true;
-								rase = false;
-							}
-						}
-					}
-					vec_w += dVec;
-				}*/
-				
-				/*
-				float destToPlayer = 0, minSolidDistance = 1000;
-				if (sh.getGlobalBounds().intersects(player.getRect()) && player.life) {
-					seeYa = true; 
-					// Проходим по всем солидам
-					for (const auto& solid : lvl.GetObjects("solid")) {
-						sf::FloatRect solidRect(solid.getAABB().left, solid.getAABB().top, solid.getAABB().width, solid.getAABB().height);
-						// Пересечение вектора взгляда с препятствием
-						if (sh.getGlobalBounds().intersects(solidRect)) {
-							float destToSolid = getDistance(enemy->x, enemy->y, solid.getAABB().left, solid.getAABB().top);
-							if (destToSolid < minSolidDistance)
-								minSolidDistance = destToSolid;
-						}
-					}
-					destToPlayer = getDistance(enemy->x, enemy->y, player.x, player.y);
-					if (minSolidDistance < destToPlayer) {
-						barrier = true;
-					}
-					else {
-						countDontSeeSolid++;
-					}
-				}
-				else {
-					countDontSeePlayer++;
-				}
-				if (countDontSeePlayer == VISION_ANGLE) { 
-					seeYa = false; 
-					countDontSeePlayer = 0; 
-					barrier = false;
-				}
-				if (countDontSeeSolid == VISION_ANGLE) { countDontSeeSolid = 0; barrier = false; }
-				if (!seeYa) barrier = false;
-				//if (seeYa)
-				//	cout << seeYa << " " << barrier << " " << destToPlayer << " " << minSolidDistance << endl;
-				*/
-				
 				if (sh.getGlobalBounds().intersects(player.getRect())) {
 					sf::FloatRect particle; particle.width = 5; particle.height = 5;
 					particle.left = sh.getPosition().x;
@@ -259,27 +213,32 @@ int main() {
 				} else {
 					countDontSeePlayer++;
 				}
+
 				if (countDontSeePlayer == VISION_ANGLE) {
 					seeYa = false;
 					countDontSeePlayer = 0;
 					barrier = false;
 				}
-				cout << seeYa << " " << barrier << endl;
+
 				// Противник идет на игрока
 				if (!barrier && seeYa && player.life) {
 					enemy->isMove = true;
-					enemy->goToCoords(player.x, player.y, time);
+					enemy->goStright(player.x, player.y, time);
 					if (!enemy->isShoot) {
-						//bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
-						//enemy->shoot();
-						//shootSound.play();
+						bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
+						enemy->shoot();
+						shootSound.play();
 					}
 				}
+				
 				// Противник идет по заданному пути
 				if (!seeYa || barrier || !player.life) {
-					enemy->isMove = true;
-					enemy->goThePath(time);
+					if (enemy->go) {
+						enemy->isMove = true;
+						enemy->goThePath(grid, time);
+					}
 				}
+
 				if (angle >= 60) { angle = -60; countDontSeePlayer = 0; }
 				angle++;
 			}
@@ -306,8 +265,12 @@ int main() {
 			if(enemy->life)
 				window.draw(enemy->legsSprite);
 			window.draw(enemy->sprite);
-			
-			window.draw(sh);
+			sf::RectangleShape rectSh(sf::Vector2f(enemy->getRect().width, enemy->getRect().height));
+			rectSh.setPosition(sf::Vector2f(enemy->getRect().left, enemy->getRect().top));
+			rectSh.setOrigin(enemy->getRect().width / 2, enemy->getRect().height / 2);
+			rectSh.setPosition(enemy->sprite.getPosition());
+			//window.draw(rectSh);
+			//window.draw(sh);
 		}
 		if (player.life)
 			window.draw(player.legsSprite);
@@ -317,5 +280,11 @@ int main() {
 		window.display();
 		//Sleep(5);
 	}
+
+	for (int i = 0; i < MAP_H; i++) {
+		delete[] grid[i];
+	}
+	delete[] grid;
+
 	return 0;
 }
