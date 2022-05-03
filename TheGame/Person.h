@@ -53,6 +53,7 @@ public:
 		if (Dy < 0) { y = obj.top + obj.height; speedY = 0; }
 		if (Dx > 0) { x = obj.left - width; }
 		if (Dx < 0) { x = obj.left + obj.width; }
+		legsTime = 0;
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy) {

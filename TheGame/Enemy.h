@@ -125,6 +125,9 @@ public:
 				//checkCollisionWithMap(speedX, speedY);
 			}
 		}
+		else {
+			isMove = false;
+		}
 	}
 
 	sf::RectangleShape getEnemyView() {

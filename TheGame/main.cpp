@@ -75,7 +75,7 @@ int main() {
 	RenderWindow window(VideoMode(1380, 720), "Game");
 	window.setMouseCursorVisible(false);
 	view.reset(sf::FloatRect(0, 0, 1380, 720));
-	
+
 	Level lvl("map.tmx");
 	MapLayer layer0(lvl.map, 0);
 	MapLayer layer1(lvl.map, 1);
@@ -90,11 +90,21 @@ int main() {
 	aimImage.loadFromFile("images/aim.png");
 	Aim aim(aimImage, "Aim", 0, 0, 52, 52);
 
-	sf::Sound shootSound;
-	sf::SoundBuffer soundBuffer;
-	soundBuffer.loadFromFile("audio/shoot.ogg");
-	shootSound.setBuffer(soundBuffer);
-	
+	sf::Sound shootSound, stepSound;
+	sf::SoundBuffer shootBuffer, stepBuffer;
+	shootBuffer.loadFromFile("audio/shoot.ogg");
+	shootSound.setBuffer(shootBuffer);
+
+	stepBuffer.loadFromFile("audio/step3.wav");
+	stepSound.setBuffer(stepBuffer);
+
+	sf::Sound enemyStepSound;
+	sf::SoundBuffer enemyStepBuffer;
+	enemyStepBuffer.loadFromFile("audio/step3.wav");
+	enemyStepSound.setBuffer(enemyStepBuffer);
+
+	sf::Listener listener;
+
 
 	Image playerImage, legsImage;
 	playerImage.loadFromFile("images/player.png");
@@ -130,6 +140,8 @@ int main() {
 		clock.restart();
 		time = time / 800;
 
+		//listener.setPosition(sf::Vector3f(player.x, player.y, 0));
+
 		pixelPos = Mouse::getPosition(window);
 		pos = window.mapPixelToCoords(pixelPos);
 		aim.setPosition(pos.x, pos.y);
@@ -143,6 +155,9 @@ int main() {
 					if (!player.isShoot) {
 						bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x, aim.y, -1));
 						player.shoot();
+						stepSound.stop();
+						enemyStepSound.stop();
+						shootSound.setVolume(100);
 						shootSound.play();
 					}
 				}
@@ -226,7 +241,26 @@ int main() {
 					enemy->goStright(player.x, player.y, time);
 					if (!enemy->isShoot) {
 						bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
+						float dest = getDistance(player.x, player.y, enemy->x, enemy->y);
+						cout << dest << endl;
+						if (dest >= 1000) {
+							shootSound.setVolume(15);
+						}
+						else if (dest >= 800) {
+							shootSound.setVolume(25);
+						}
+						else if (dest >= 500) {
+							shootSound.setVolume(50);
+						}
+						else if (dest >= 300) {
+							shootSound.setVolume(75);
+						}
+						else {
+							shootSound.setVolume(100);
+						}
 						enemy->shoot();
+						stepSound.stop();
+						enemyStepSound.stop();
 						shootSound.play();
 					}
 				}
@@ -247,12 +281,39 @@ int main() {
 
 		for (it = enemies.begin(); it != enemies.end(); it++) {
 			(*it)->update(time);
+			if ((*it)->isMove) {
+				if (enemyStepSound.getStatus() != sf::SoundSource::Status::Playing && stepSound.getStatus() != sf::SoundSource::Status::Playing) {
+					enemyStepSound.setPitch(1.1f);
+					float dest = getDistance(player.x, player.y, (*it)->x, (*it)->y);
+					if (dest >= 400) {
+						enemyStepSound.setVolume(0);
+					}else if (dest >= 300) {
+						enemyStepSound.setVolume(25);
+					}
+					else if (dest >= 200) {
+						enemyStepSound.setVolume(50);
+					}
+					else if (dest >= 100) {
+						enemyStepSound.setVolume(75);
+					}
+					else {
+						enemyStepSound.setVolume(100);
+					}
+					enemyStepSound.play();
+				}
+			}
+
 		}
 		updateList(it, bullets, time);
 		
-
 		player.rotate(aim.x, aim.y);
 		player.update(time);
+		if (player.isMove) {
+			if (stepSound.getStatus() != sf::SoundSource::Status::Playing) {
+				stepSound.setPitch(1.1f);
+				stepSound.play();
+			}
+		}
 
 		window.setView(view);
 		window.clear(Color(130, 137, 150));
