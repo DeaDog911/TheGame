@@ -16,7 +16,6 @@ public:
 		sprite.setTextureRect(sf::IntRect(90, 8, width, height));
 		obj = lev.GetAllObjects();
 		sprite.setScale(2, 2);
-		height *= 2;
 		height *= 1.5;
 		width = height;
 	}

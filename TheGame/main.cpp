@@ -163,7 +163,7 @@ int main() {
 	Object playerObj = lvl.GetObject("player");
 	Player player(playerImage, legsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
 
-	player.takeWeapon(Gun);
+	player.takeWeapon(Weapon(Gun));
 
 	Image bulletImage;
 	bulletImage.loadFromFile("images/bullet_tr2.png");
@@ -171,7 +171,7 @@ int main() {
 	vector <Object> enemiesObj = lvl.GetObjects("enemy");
 	for (int i = 0; i < enemiesObj.size(); i++) {
 		Enemy* enemy = new Enemy(playerImage, legsImage, "Enemy", lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
-		enemy->takeWeapon(Gun);
+		enemy->takeWeapon(Weapon(Melee));
 		enemies.push_back(enemy);
 	}
 
@@ -181,6 +181,24 @@ int main() {
 	float dt = 70;
 
 	vector<Object> solids = lvl.GetObjects("solid");
+
+	vector<Object> weaponsObj = lvl.GetObjectsWithType("weapon");
+	list<Weapon> weapons;
+	list<Weapon>::iterator it_w;
+
+	for (int i = 0; i < weaponsObj.size(); i++) {
+		Weapon weapon;
+		if (weaponsObj[i].getName() == "melee") {
+			weapon = Weapon(Melee);
+			weapon.setPosition(weaponsObj[i].getAABB().left, weaponsObj[i].getAABB().top);
+		}
+		else {
+			weapon = Weapon(Gun);
+			weapon.setPosition(weaponsObj[i].getAABB().left, weaponsObj[i].getAABB().top);
+		}
+		weapons.push_back(weapon);
+	}
+
 	put_solids(grid, solids);
 	vector<pair<int, int>> path;
 	vector<pair<int, int> >::iterator path_i;
@@ -207,10 +225,10 @@ int main() {
 				window.close();
 			if (event.type == Event::MouseButtonPressed) {
 				if (event.key.code == Mouse::Left && player.life) {
-					if (!player.isShoot && player.weapon == Gun) {
+					if (!player.isShoot && player.weapon.type == Gun) {
 						stepSound.stop();
 						enemyStepSound.stop();
-						if (player.ammoCount > 0 && player.weapon == Gun) {
+						if (player.ammoCount > 0 && player.weapon.type == Gun) {
 							bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x, aim.y, -1));
 							player.shoot();
 							shootSound.setVolume(100);
@@ -220,7 +238,7 @@ int main() {
 						}
 						shootNoAmmoSound.play();
 					}
-					if (!player.isHit && player.weapon == Melee) {
+					if (!player.isHit && player.weapon.type == Melee) {
 						player.hit();
 						stepSound.stop();
 						enemyStepSound.stop();
@@ -338,7 +356,7 @@ int main() {
 						enemy->goToCoords(player.x, player.y, grid, time);
 					else
 						enemy->goStright(player.x, player.y, time);
-					if (enemy->weapon == Gun) {
+					if (enemy->weapon.type == Gun) {
 						if (!enemy->isShoot) {
 							/*
 							bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
@@ -365,7 +383,7 @@ int main() {
 							*/
 						}
 					}
-					else if (enemy->weapon == Melee) {
+					else if (enemy->weapon.type == Melee) {
 						if (!enemy->isHit && enemy->getAttackRect().intersects(player.getRect())) {
 							enemy->hit();
 							stepSound.stop();
@@ -456,10 +474,17 @@ int main() {
 			window.draw(layer1);
 			window.draw(layer2);
 
+			// Рисуем оружие, лежащее на земле
+			for (it_w = weapons.begin(); it_w != weapons.end(); it_w++) {
+				window.draw(it_w->sprite);
+			}
+			
+			// Рисуем мертвого игрока
 			if (!player.life) {
 				window.draw(player.sprite);
 			}
 
+			// Рисуем врагов
 			for (it = enemies.begin(); it != enemies.end(); it++) {
 				Enemy* enemy = (Enemy*)*it;
 				if (enemy->life)
@@ -475,18 +500,23 @@ int main() {
 				*/
 				//window.draw(sh);
 			}
+
+			// Рисуем живого игрока
 			if (player.life) {
 				window.draw(player.legsSprite);
 				window.draw(player.sprite);
 			}
+
+			// Рисуем пули
 			drawList(it, bullets, window);
 			window.draw(aim.sprite);
 
-			if (player.weapon == Gun) {
+			if (player.weapon.type == Gun) {
 				window.draw(ammoSprite);
 				ammoText.setString(std::to_string(player.ammoCount));
 				window.draw(ammoText);
 			}
+
 
 			window.display();
 			//Sleep(5);

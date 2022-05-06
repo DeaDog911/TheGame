@@ -36,8 +36,9 @@ public:
 	}
 
 	void takeWeapon(Weapon weapon) {
+		weapon.free = false;
 		this->weapon = weapon;
-		if (weapon == Melee) {
+		if (weapon.type == Melee) {
 			Image image;
 			image.loadFromFile("images/player_melee.png");
 			texture.loadFromImage(image);
@@ -45,7 +46,7 @@ public:
 			sprite.setTextureRect(sf::IntRect(82, 23, 16, 31));
 			sprite.setOrigin(width / 2 / 1.5, height / 2 / 1.5);
 		}
-		else if (weapon == Gun) {
+		else if (weapon.type == Gun) {
 			Image image;
 			image.loadFromFile("images/player.png");
 			texture.loadFromImage(image);
@@ -131,7 +132,6 @@ public:
 		for (int i = 0; i < obj.size(); i++) {
 			if (obj[i].getName() == "solid") {
 				if (getRect().intersects(sf::FloatRect(obj[i].getAABB().left, obj[i].getAABB().top, obj[i].getAABB().width, obj[i].getAABB().height))) {
-					cout << "solid" << endl;
 					tmx::FloatRect tmxRect = obj[i].getAABB();
 					stopInFront(sf::FloatRect(tmxRect.left, tmxRect.top, tmxRect.width, tmxRect.height), speedX, speedY);
 				}
