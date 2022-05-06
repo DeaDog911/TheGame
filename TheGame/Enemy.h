@@ -13,13 +13,21 @@ private:
 	float trackId;
 	bool isCollised;
 public:
-	bool go;
+	bool go, goToShootSound;
 	int num;
-	Enemy(sf::Image & image, sf::Image& LegsImage, std::string Name, Level& lvl, float X, float Y, int W, int H, int Num) : Person(image, LegsImage, Name, lvl, X, Y, W, H) {
+
+	const float VISION_ANGLE = 120;
+	float angle = -(VISION_ANGLE / 2), countDontSeePlayer = 0, countDontSeeSolid = 0;
+	bool seeYa = false, barrier = false;
+	int dVec = 10;
+	float dontSeeYaTime = 5000;
+
+	Enemy(sf::Image & image, sf::Image& LegsImage, std::string Name, Level& lvl, float X, float Y, int W, int H, int num) : Person(image, LegsImage, Name, lvl, X, Y, W, H) {
 		path_time = 2000;
-		bool isCollised = false;
+		isCollised = false;
 		go = true;
-		num = Num;
+		goToShootSound = false;
+		this->num = num;
 		isMove = false;
 		trackId = 0;
 		obj = lvl.GetObjects("solid");
@@ -28,7 +36,6 @@ public:
 			sprite.setTextureRect(sf::IntRect(90, 8, width, height));
 			sprite.setScale(2, 2);
 		}
-		//width *= 1.5;
 		height *= 1.5;
 		width = height;
 
@@ -99,11 +106,17 @@ public:
 			else if (grid[path_i->second - 1][path_i->first - 1] != MAXINT) {
 				goStright(path_x - cell_w, path_y - cell_h, time);
 			}
-			else if (grid[path_i->second ][path_i->first + 1] != MAXINT) {
+			else if (grid[path_i->second][path_i->first + 1] != MAXINT) {
 				goStright(path_x + cell_w, path_y, time);
 			}
 			else if (grid[path_i->second][path_i->first - 1] != MAXINT) {
-				goStright(path_x - cell_w, path_y - cell_h, time);
+				goStright(path_x - cell_w, path_y, time);
+			}
+			else if (grid[path_i->second + 1][path_i->first - 1] != MAXINT) {
+				goStright(path_x - cell_w, path_y + cell_h, time);
+			}
+			else if (grid[path_i->second - 1][path_i->first + 1] != MAXINT) {
+				goStright(path_x + cell_w, path_y - cell_h, time);
 			}
 		}
 		if (getRect().intersects(sf::FloatRect(path_x + 8, path_y + 8, 1, 1))) {
@@ -117,11 +130,11 @@ public:
 		if (life) {
 			if (name == "Enemy") {
 				legsTime += time;
-				if (isShoot)
+				if (isShoot || isHit)
 					shootTime += time;
-				updateLegs();
-				updateSprite();
 				sprite.setPosition(x + width / 2, y + height / 2);
+				updateSprite();
+				updateLegs();
 				//checkCollisionWithMap(speedX, speedY);
 			}
 		}

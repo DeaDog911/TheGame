@@ -13,14 +13,22 @@ vector<pair<int, int> > get_path(int originX, int originY, int targetX, int targ
 	}
 
 	if (map[targetY][targetX] == MAXINT) {
-		if (map[targetY + 1][targetX] != MAXINT) {
+		if (map[targetY + 1][targetX] != MAXINT && targetY < MAP_H - 1) {
 			targetY++;
-		} else if (map[targetY - 1][targetX] != MAXINT) {
+		} else if (map[targetY - 1][targetX] != MAXINT && targetY > 0) {
 			targetY--;
-		} else if (map[targetY][targetX - 1] != MAXINT) {
+		} else if (map[targetY][targetX - 1] != MAXINT && targetX > 0) {
 			targetX--;
-		} else if (map[targetY][targetX + 1] != MAXINT) {
+		} else if (map[targetY][targetX + 1] != MAXINT && targetX < MAP_W - 1) {
 			targetX++;
+		}else if (map[targetY + 1][targetX + 1] != MAXINT && (targetX < MAP_W - 1) && (targetY < MAP_H - 1)) {
+			targetX++; targetY++;
+		}else if (map[targetY - 1][targetX - 1] != MAXINT && (targetX > 0) && (targetY > 0)) {
+			targetX--; targetY--;
+		}else if (map[targetY - 1][targetX + 1] != MAXINT && (targetX > 0) && (targetY > MAP_H - 1)) {
+			targetX++; targetY--;
+		}else if (map[targetY + 1][targetX - 1] != MAXINT) {
+			targetX--; targetY++;
 		}
 	}
 
@@ -85,6 +93,7 @@ vector<pair<int, int> > get_path(int originX, int originY, int targetX, int targ
 }
 
 void display(int** grid) {
+
 	for (int i = 0; i < 50; i++) {
 		for (int j = 0; j < 50; j++) {
 			if (grid[i][j] == MAXINT) {

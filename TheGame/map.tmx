@@ -5014,7 +5014,7 @@
   </data>
  </layer>
  <objectgroup id="2" name="collision">
-  <object id="3" name="solid" x="-0.983768" y="0.0649287" width="801.755" height="14.7241"/>
+  <object id="3" name="solid" x="-0.483768" y="0.564929" width="801.755" height="14.7241"/>
   <object id="6" name="solid" x="1.1225" y="784.638" width="801.755" height="14.7241"/>
   <object id="7" name="solid" x="785.122" y="16.638" width="22.755" height="772.724"/>
   <object id="8" name="solid" x="-7.3775" y="14.638" width="22.755" height="772.724"/>
@@ -5023,8 +5023,8 @@
   <object id="26" name="1" type="track" x="331" y="268">
    <point/>
   </object>
-  <object id="47" name="solid" x="174.373" y="201.388" width="11.005" height="150.974"/>
-  <object id="48" name="solid" x="84.0316" y="198.638" width="92.2777" height="10.974"/>
+  <object id="47" name="solid" x="174.373" y="198.638" width="11.005" height="153.724"/>
+  <object id="48" name="solid" x="79.2816" y="198.638" width="106.028" height="10.974"/>
   <object id="49" name="solid" x="428.622" y="72.2213" width="14.005" height="391.391"/>
   <object id="50" name="solid" x="432.789" y="512.721" width="7.755" height="207.224"/>
   <object id="53" name="solid" x="654.873" y="178.888" width="10.255" height="125.724"/>

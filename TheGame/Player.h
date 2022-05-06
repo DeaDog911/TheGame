@@ -10,11 +10,13 @@ private:
 	float playerSpeed = personSpeed;
 	enum { left, right, up, down, stay, right_up, right_down, left_up, left_down } state;
 public:
+	float soundCircleRadius = 300.f;
 	Player(Image& playerImage, Image& LegsImage, string Name, Level& lev, float X, float Y, float W, float H) : Person(playerImage, LegsImage, Name, lev, X, Y, W, H) {
 		state = stay;
 		sprite.setTextureRect(sf::IntRect(90, 8, width, height));
 		obj = lev.GetAllObjects();
 		sprite.setScale(2, 2);
+		height *= 2;
 		height *= 1.5;
 		width = height;
 	}
@@ -73,7 +75,7 @@ public:
 			setPlayerCoordinateForView(x, y);
 			legsTime += time;
 			updateSprite();
-			if (isShoot) {
+			if (isShoot || isHit) {
 				shootTime += time;
 			}
 			updateLegs();
