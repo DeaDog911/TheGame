@@ -130,6 +130,19 @@ int main() {
 	ammoText.setOutlineThickness(3);
 	ammoText.setOutlineColor(sf::Color(0, 0, 0));
 
+	sf::Image healthImage;
+	sf::Texture healthTexture;
+	sf::Sprite healthSprite;
+	healthImage.loadFromFile("images/health.png");
+	healthTexture.loadFromImage(healthImage);
+	healthSprite.setTexture(healthTexture);
+	healthSprite.setTextureRect(sf::IntRect(159, 319, 881, 97));
+	healthSprite.setScale(0.4, 0.4);
+
+	sf::RectangleShape healthRect;
+	healthRect.setFillColor(Color(64, 64, 64));
+	healthRect.setSize(sf::Vector2f(847 * 0.4, 65 * 0.4));
+	healthRect.setScale(-1, 1);
 
 	sf::Listener listener;
 	sf::Sound shootSound, stepSound;
@@ -241,6 +254,10 @@ int main() {
 
 		ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 270);
 		ammoText.setPosition(view.getCenter().x + 520, view.getCenter().y + 260);
+
+		healthSprite.setPosition(view.getCenter().x - 650, view.getCenter().y - 330);
+		healthRect.setPosition(view.getCenter().x - 643 + 847 * 0.4, view.getCenter().y - 324);
+		healthRect.setSize(sf::Vector2f(((847 * 0.4) / 100) * (100 - player.health), 65 * 0.4));
 
 		Event event;
 
@@ -568,14 +585,15 @@ int main() {
 			if (enemy->life)
 				window.draw(enemy->legsSprite);
 			window.draw(enemy->sprite);
+			
 			/*
 			sf::RectangleShape rectSh(sf::Vector2f(enemy->getRect().width, enemy->getRect().height));
 			rectSh.setPosition(sf::Vector2f(enemy->getRect().left, enemy->getRect().top));
 			rectSh.setOrigin(enemy->getRect().width / 2, enemy->getRect().height / 2);
 			rectSh.setPosition(enemy->sprite.getPosition());
 			//window.draw(rectSh);
-
 			*/
+			
 			//window.draw(sh);
 		}
 
@@ -594,6 +612,9 @@ int main() {
 			ammoText.setString(std::to_string(player.weapon.ammoCount));
 			window.draw(ammoText);
 		}
+
+		window.draw(healthSprite);
+		window.draw(healthRect);
 
 		window.display();
 		//Sleep(5);
