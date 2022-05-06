@@ -145,6 +145,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AmmoBox.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="consts.h" />
     <ClInclude Include="Enemy.h" />

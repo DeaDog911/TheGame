@@ -13,13 +13,13 @@ private:
 	sf::Texture legsTexture;
 	float dt;
 	bool hitted = false;
-	
 	float shootX, shootY;
 public:
+	bool got;
 	bool attack = false;
 	sf::Sprite legsSprite;
-	int ammoCount;
 	Weapon weapon;
+	float health;
 	bool isShoot, isHit;
 	Person(sf::Image& personImage, sf::Image& LegsImage, std::string Name, Level& lev, float X, float Y, float W, float H) : Entity(personImage, Name, X, Y, W, H) {
 		legsTime = 0;
@@ -32,12 +32,13 @@ public:
 		legsSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 		legsSprite.setScale(2, 2);
 		legsSprite.setOrigin(16, 16);
-		ammoCount = 10;
+		health = 100;
+		got = false;
 	}
 
-	void takeWeapon(Weapon weapon) {
-		weapon.free = false;
-		this->weapon = weapon;
+	void takeWeapon(Weapon Weapon) {
+		weapon.active = true;
+		weapon = Weapon;
 		if (weapon.type == Melee) {
 			Image image;
 			image.loadFromFile("images/player_melee.png");
@@ -137,6 +138,8 @@ public:
 				}
 			}
 		}
+		weapon.setPosition(x, y);
+		weapon.active = false;
 	}
 
 	void updateSprite() {
@@ -180,6 +183,7 @@ public:
 			if (i >= 4) { attack = true; }
 			if (i == 0) {
 				attack = false;
+				got = false;
 			}
 			sprite.setTextureRect(rects[i]);
 		}
@@ -198,7 +202,7 @@ public:
 		shootTime = 0;
 		shootX = x;
 		shootY = y;
-		ammoCount--;
+		weapon.ammoCount--;
 	}
 
 	void hit() {

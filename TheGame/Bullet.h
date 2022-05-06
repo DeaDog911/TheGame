@@ -8,7 +8,9 @@ private:
 	float bullet_speed;
 	float targetX, targetY, distance;
 	float vx, vy;
+	
 public:
+	float damage;
 	int num;
 	float fromX, fromY;
 	Bullet(sf::Image& image, std::string Name, Level& lvl, float X, float Y, float W, float H, float tX, float tY, int Num) : Entity(image, Name, X, Y, W, H) {
@@ -24,6 +26,7 @@ public:
 		vx = (targetX - x) / distance;
 		vy = (targetY - y) / distance;
 		rotate(targetX, targetY);
+		damage = 50;
 	}
 
 	void update(float time)
