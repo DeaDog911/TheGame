@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="67">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="71">
  <tileset firstgid="1" name="bacground0" tilewidth="16" tileheight="16" tilecount="1344" columns="56">
   <image source="resources/assets/Floor_tiles/bacground0.png" width="896" height="384"/>
  </tileset>
@@ -5039,16 +5039,32 @@
   <object id="58" name="4" type="track" x="537" y="223">
    <point/>
   </object>
-  <object id="59" name="melee" type="weapon" x="103" y="458" width="27" height="4">
+  <object id="59" name="bat" type="weapon" x="103" y="458" width="27" height="4">
    <properties>
     <property name="weaponType" value="melee"/>
    </properties>
   </object>
-  <object id="60" name="gun" type="weapon" x="100.5" y="502.667" width="27" height="4">
+  <object id="60" name="shotgun" type="weapon" x="100.5" y="502.667" width="27" height="4">
    <properties>
     <property name="weaponType" value="gun"/>
    </properties>
   </object>
   <object id="65" name="ammoBox" x="90" y="590" width="18.6667" height="16.6667"/>
+  <object id="67" name="healthKit" x="152" y="596.333" width="18.6667" height="16.6667"/>
+  <object id="68" name="pipe" type="weapon" x="164.5" y="457.333" width="27" height="4">
+   <properties>
+    <property name="weaponType" value="melee"/>
+   </properties>
+  </object>
+  <object id="69" name="pistol" type="weapon" x="176.5" y="507.333" width="27" height="4">
+   <properties>
+    <property name="weaponType" value="gun"/>
+   </properties>
+  </object>
+  <object id="70" name="rifle" type="weapon" x="99.1667" y="540" width="27" height="4">
+   <properties>
+    <property name="weaponType" value="gun"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

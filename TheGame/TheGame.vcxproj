@@ -150,6 +150,8 @@
     <ClInclude Include="consts.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="HealthKit.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="parse.h" />
     <ClInclude Include="Pathfinding.h" />

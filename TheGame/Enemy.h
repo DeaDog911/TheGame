@@ -13,9 +13,9 @@ private:
 	float trackId;
 	bool isCollised;
 public:
+	float timeFromSeeYa;
 	bool go, goToShootSound;
 	int num;
-
 	const float VISION_ANGLE = 120;
 	float angle = -(VISION_ANGLE / 2), countDontSeePlayer = 0, countDontSeeSolid = 0;
 	bool seeYa = false, barrier = false;
@@ -38,7 +38,7 @@ public:
 		}
 		height *= 1.5;
 		width = height;
-
+		timeFromSeeYa = 0;
 	}
 
 	void goThePath(int ** grid, float time) {

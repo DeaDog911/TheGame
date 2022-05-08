@@ -40,19 +40,17 @@ public:
 		weapon.active = true;
 		weapon = Weapon;
 		if (weapon.type == Melee) {
-			Image image;
-			image.loadFromFile("images/player_melee.png");
+			sf::Image image;
+			image.loadFromFile(getPlayerSpriteFile(weapon.name));
 			texture.loadFromImage(image);
-			sprite.setTexture(texture);
-			sprite.setTextureRect(sf::IntRect(82, 23, 16, 31));
-			sprite.setOrigin(width / 2 / 1.5, height / 2 / 1.5);
+			sprite.setTextureRect(getPlayerTextureRect(weapon.name));
+			sprite.setOrigin(8, 15);
 		}
 		else if (weapon.type == Gun) {
-			Image image;
-			image.loadFromFile("images/player.png");
+			sf::Image image;
+			image.loadFromFile(getPlayerSpriteFile(weapon.name));
 			texture.loadFromImage(image);
-			sprite.setTexture(texture);
-			sprite.setTextureRect(sf::IntRect(90, 8, 32, 18));
+			sprite.setTextureRect(getPlayerTextureRect(weapon.name));
 			sprite.setOrigin(16, 8);
 		}
 	}
@@ -146,13 +144,42 @@ public:
 		float shootDt = dt + 5;
 		float hitDt = dt + 15;
 		if (isShoot) {
-			int i = int(shootTime / shootDt);
-			if (shootTime >= shootDt * 12) { shootTime = 0; isShoot = false; return; };
-			if (i < 2) {
-				sprite.setTextureRect(sf::IntRect(2 + i * 42, 8, 42, 18));
+			if (weapon.name == Shotgun) {
+				int i = int(shootTime / shootDt);
+				if (shootTime >= shootDt * 12) { shootTime = 0; isShoot = false; return; };
+				if (i < 2) {
+					sprite.setTextureRect(sf::IntRect(2 + i * 42, 8, 42, 18));
+				}
+				else {
+					sprite.setTextureRect(sf::IntRect(91 + (12 + 32) * (i - 2), 8, 32, 18));
+				}
 			}
-			else {
-				sprite.setTextureRect(sf::IntRect(91 + (12 + 32) * (i - 2), 8, 32, 18));
+			else if (weapon.name == Pistol) {
+				sf::IntRect rects[3] = {
+				sf::IntRect(1, 6, 41, 13),
+				sf::IntRect(45, 5, 43, 14),
+				sf::IntRect(89, 6, 35, 13),
+				};
+				int i = int(shootTime / shootDt);
+				if (i >= 3) {
+					shootTime = 0;
+					isShoot = false;
+					return;
+				}
+				sprite.setTextureRect(rects[i]);
+			}
+			else if (weapon.name == Rifle) {
+				sf::IntRect rects[2] = {
+				sf::IntRect(4, 9, 36, 16),
+				sf::IntRect(49, 8, 29, 17),
+				};
+				int i = int(shootTime / shootDt);
+				if (i >= 2) {
+					shootTime = 0;
+					isShoot = false;
+					return;
+				}
+				sprite.setTextureRect(rects[i]);
 			}
 		}
 		else if (isHit) {
@@ -202,7 +229,13 @@ public:
 		shootTime = 0;
 		shootX = x;
 		shootY = y;
-		weapon.ammoCount--;
+		if (weapon.name == Shotgun) {
+			weapon.ammoCount -= 3;
+		}
+		else {
+			weapon.ammoCount--;
+		}
+		if (weapon.ammoCount < 0) weapon.ammoCount = 0;
 	}
 
 	void hit() {

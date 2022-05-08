@@ -23,6 +23,7 @@
 #include "consts.h"
 #include "Pathfinding.h"
 #include "AmmoBox.h"
+#include "HealthKit.h"
 
 using namespace std;
 using namespace sf;
@@ -33,6 +34,8 @@ private:
 public:
 	Aim(Image& image, string Name, float X, float Y, float W, float H) : Entity(image, Name, X, Y, W, H) {
 		image.createMaskFromColor(Color(255, 255, 255));
+		sprite.setOrigin(width / 2, height / 2);
+		sprite.setScale(0.75, 0.75);
 	}
 
 	void update(float time) {}
@@ -73,7 +76,6 @@ sf::CircleShape getSoundSpreadCircle(float radius, float x, float y) {
 }
 
 int main() {
-
 	int** grid = new int* [MAP_H];
 	for (int i = 0; i < MAP_H; i++) {
 		grid[i] = new int[MAP_W];
@@ -115,9 +117,6 @@ int main() {
 	ammoImage.createMaskFromColor(Color(0, 0, 0));
 	ammoTexture.loadFromImage(ammoImage);
 	ammoSprite.setTexture(ammoTexture);
-	ammoSprite.setTextureRect(sf::IntRect(1139, 507, 211, 425));
-	ammoSprite.setOrigin(211 * 0.15f / 2, 425 * 0.15f / 2);
-	ammoSprite.setScale(0.15f, 0.15f);
 
 	sf::Font ammoFont;
 	ammoFont.loadFromFile("fonts/GUNPLAY_.ttf");
@@ -137,19 +136,31 @@ int main() {
 	healthTexture.loadFromImage(healthImage);
 	healthSprite.setTexture(healthTexture);
 	healthSprite.setTextureRect(sf::IntRect(159, 319, 881, 97));
-	healthSprite.setScale(0.4, 0.4);
+	float scale_k = 0.3;
+	healthSprite.setScale(scale_k, scale_k);
 
 	sf::RectangleShape healthRect;
 	healthRect.setFillColor(Color(64, 64, 64));
-	healthRect.setSize(sf::Vector2f(847 * 0.4, 65 * 0.4));
+	healthRect.setSize(sf::Vector2f(847 * scale_k, 65 * scale_k));
 	healthRect.setScale(-1, 1);
 
-	sf::Listener listener;
-	sf::Sound shootSound, stepSound;
+	sf::Sound shootSound;
 	sf::SoundBuffer shootBuffer, stepBuffer;
 	shootBuffer.loadFromFile("audio/shoot.ogg");
 	shootSound.setBuffer(shootBuffer);
 
+	sf::Sound rifleShootSound, shotgunShootSound, pistolShotSound;
+	sf::SoundBuffer rifleShootSoundBuffer, shotgunShootSoundBuffer, pistolShotSoundBuffer;
+	rifleShootSoundBuffer.loadFromFile("audio/rifle_shoot2.wav");
+	shotgunShootSoundBuffer.loadFromFile("audio/shotgun_shoot.wav");
+	pistolShotSoundBuffer.loadFromFile("audio/pistol_shoot2.wav");
+	rifleShootSound.setBuffer(rifleShootSoundBuffer);
+	shotgunShootSound.setBuffer(shotgunShootSoundBuffer);
+	pistolShotSound.setBuffer(pistolShotSoundBuffer);
+
+	sf::Sound shootSounds[] = { rifleShootSound , shotgunShootSound, pistolShotSound };
+
+	sf::Sound stepSound;
 	stepBuffer.loadFromFile("audio/step3.wav");
 	stepSound.setBuffer(stepBuffer);
 
@@ -173,6 +184,30 @@ int main() {
 	meleeMissBuffer.loadFromFile("audio/meleeMiss.wav");
 	meleeMissSound.setBuffer(meleeMissBuffer);
 
+	sf::Sound raiseItemSound;
+	sf::SoundBuffer raiseItemBuffer;
+	raiseItemBuffer.loadFromFile("audio/raise_item.wav");
+	raiseItemSound.setBuffer(raiseItemBuffer);
+
+	sf::Sound healthKitSound;
+	sf::SoundBuffer healthKitBuffer;
+	healthKitBuffer.loadFromFile("audio/health_kit.wav");
+	healthKitSound.setBuffer(healthKitBuffer);
+
+	sf::Sound deathSound;
+	sf::SoundBuffer deathSoundBuffer;
+	deathSoundBuffer.loadFromFile("audio/death.wav");
+	deathSound.setBuffer(deathSoundBuffer);
+
+	sf::Sound enemyDeathSound;
+	sf::SoundBuffer enemyDeathSoundBuffer;
+	enemyDeathSoundBuffer.loadFromFile("audio/enemy_death.wav");
+	enemyDeathSound.setBuffer(enemyDeathSoundBuffer);
+
+	sf::Sound bulletHitSound;
+	sf::SoundBuffer bulletHitSoundBuffer;
+	bulletHitSoundBuffer.loadFromFile("audio/bullet_hit.wav");
+	bulletHitSound.setBuffer(bulletHitSoundBuffer);
 
 	Image playerImage, legsImage;
 	playerImage.loadFromFile("images/player.png");
@@ -190,7 +225,12 @@ int main() {
 	ammoBoxImage.loadFromFile("images/ammo_box.png");
 	ammoBoxTexture.loadFromImage(ammoBoxImage);
 
-	Weapon wp(weaponsTexture, Gun);
+	sf::Image healthKitImage;
+	sf::Texture healthKitTexture;
+	healthKitImage.loadFromFile("images/health_kit.png");
+	healthKitTexture.loadFromImage(healthKitImage);
+
+	Weapon wp(weaponsTexture, Gun, Shotgun);
 	player.takeWeapon(wp);
 
 	Image bulletImage;
@@ -199,7 +239,7 @@ int main() {
 	vector <Object> enemiesObj = lvl.GetObjects("enemy");
 	for (int i = 0; i < enemiesObj.size(); i++) {
 		Enemy* enemy = new Enemy(playerImage, legsImage, "Enemy", lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
-		Weapon wp(weaponsTexture, Melee);
+		Weapon wp(weaponsTexture, Gun, Shotgun);
 		enemy->takeWeapon(wp);
 		enemies.push_back(enemy);
 	}
@@ -215,14 +255,13 @@ int main() {
 
 	for (int i = 0; i < weaponsObj.size(); i++) {
 		Weapon weapon;
-		if (weaponsObj[i].getName() == "melee") {
-			weapon = Weapon(weaponsTexture, Melee);
-			weapon.setPosition(weaponsObj[i].getAABB().left, weaponsObj[i].getAABB().top);
+		if (weaponsObj[i].getProperties()[0].getStringValue() == "melee") {
+			weapon = Weapon(weaponsTexture, Melee, getEnumIndex(weaponsObj[i].getName()));
 		}
-		else {
-			weapon = Weapon(weaponsTexture, Gun);
-			weapon.setPosition(weaponsObj[i].getAABB().left, weaponsObj[i].getAABB().top);
+		else if (weaponsObj[i].getProperties()[0].getStringValue() == "gun") {
+			weapon = Weapon(weaponsTexture, Gun, getEnumIndex(weaponsObj[i].getName()));
 		}
+		weapon.setPosition(weaponsObj[i].getAABB().left, weaponsObj[i].getAABB().top);
 		weapons.push_back(weapon);
 	}
 
@@ -236,6 +275,16 @@ int main() {
 		ammoBoxes.push_back(ammoBox);
 	}
 
+	vector<Object> healthKitsObj = lvl.GetObjects("healthKit");
+	list<HealthKit> healthKits;
+	list<HealthKit>::iterator it_hk;
+
+	for (int i = 0; i < healthKitsObj.size(); i++) {
+		HealthKit healthKit(healthKitTexture);
+		healthKit.setPosition(healthKitsObj[i].getAABB().left, healthKitsObj[i].getAABB().top);
+		healthKits.push_back(healthKit);
+	}
+
 	put_solids(grid, solids);
 	vector<pair<int, int>> path;
 	vector<pair<int, int> >::iterator path_i;
@@ -246,18 +295,35 @@ int main() {
 		clock.restart();
 		time = time / 800;
 
-		//listener.setPosition(sf::Vector3f(player.x, player.y, 0));
-
 		pixelPos = Mouse::getPosition(window);
 		pos = window.mapPixelToCoords(pixelPos);
 		aim.setPosition(pos.x, pos.y);
 
-		ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 270);
-		ammoText.setPosition(view.getCenter().x + 520, view.getCenter().y + 260);
+		if (player.weapon.type == Gun) {
+			switch (player.weapon.name) {
+			case Shotgun: 
+				ammoSprite.setTextureRect(sf::IntRect(1139, 507, 211, 425));
+				ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 270);
+				ammoSprite.setScale(0.15, 0.15);
+				break;
+			case Pistol: 
+				ammoSprite.setTextureRect(sf::IntRect(36, 686, 101, 246)); 
+				ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 260);
+				ammoSprite.setScale(0.3, 0.3);
+				break;
+			case Rifle: 
+				ammoSprite.setTextureRect(sf::IntRect(448, 224, 121, 707));
+				ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 225);
+				ammoSprite.setScale(0.15, 0.15);
+				break;
+			}
+		}
+
+		ammoText.setPosition(view.getCenter().x + 510, view.getCenter().y + 260);
 
 		healthSprite.setPosition(view.getCenter().x - 650, view.getCenter().y - 330);
-		healthRect.setPosition(view.getCenter().x - 643 + 847 * 0.4, view.getCenter().y - 324);
-		healthRect.setSize(sf::Vector2f(((847 * 0.4) / 100) * (100 - player.health), 65 * 0.4));
+		healthRect.setPosition(view.getCenter().x - 645 + 849 * scale_k, view.getCenter().y - 325);
+		healthRect.setSize(sf::Vector2f(((849 * scale_k) / 100) * (100 - player.health), 65 * scale_k));
 
 		Event event;
 
@@ -271,13 +337,18 @@ int main() {
 						enemyStepSound.stop();
 						if (player.weapon.ammoCount > 0 && player.weapon.type == Gun) {
 							bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x, aim.y, -1));
+							if (player.weapon.name == Shotgun) {
+								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x - 15, aim.y - 15, -1));
+								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x + 15, aim.y + 15, -1));
+							}
 							player.shoot();
 							shootSound.setVolume(100);
-							shootSound.play();
+							shootSounds[getSoundId(player.weapon.name)].play();
 							playerShootCoords.x = player.x;
 							playerShootCoords.y = player.y;
 						}
-						shootNoAmmoSound.play();
+						if (player.weapon.ammoCount == 0)
+							shootNoAmmoSound.play();
 					}
 					if (!player.isHit && player.weapon.type == Melee) {
 						player.hit();
@@ -300,6 +371,8 @@ int main() {
 								player.takeWeapon(weapon);
 								weapons.push_back(player_weapon);
 								weapons.erase(it_w);
+								stepSound.stop();
+								raiseItemSound.play();
 								break;
 							}
 						}
@@ -309,7 +382,8 @@ int main() {
 		}
 		sf::FloatRect rect;
 		sf::RectangleShape sh;
-		for (it = enemies.begin(); it != enemies.end(); it++) {
+		int i;
+		for (it = enemies.begin(), i = 0; it != enemies.end(); it++, i++) {
 			Enemy* enemy = (Enemy*)(*it);
 			if (enemy->life) {
 				if (bullets.size() > 0)
@@ -318,11 +392,15 @@ int main() {
 						// Убийство ВРАГА
 						if (enemy->getRect().intersects(bullet->getRect())) {
 							if (enemy->num != bullet->num) {
+								shootSound.pause();
+								bulletHitSound.play();
+								shootSounds[getSoundId(player.weapon.name)].play();
 								enemy->health -= bullet->damage;
 								bullet->life = false;
 								if (enemy->health <= 0) {
 									enemy->life = false;
 									enemy->setDeadSprite(bullet->sprite.getRotation());
+									enemyDeathSound.play();
 									enemy->weapon.active = false;
 									weapons.push_back(enemy->weapon);
 								}
@@ -331,11 +409,15 @@ int main() {
 						// Убийство ИГРОКА
 						if (player.getRect().intersects(bullet->getRect())) {
 							if (bullet->num != -1) {
+								shootSound.pause();
+								bulletHitSound.play();
+								shootSounds[getSoundId(player.weapon.name)].play();
 								player.health -= bullet->damage;
 								bullet->life = false;
 								if (player.health <= 0) {
 									player.life = false;
 									player.setDeadSprite(bullet->sprite.getRotation());
+									deathSound.play();
 									player.weapon.active = false;
 									weapons.push_back(player.weapon);
 								}
@@ -354,6 +436,7 @@ int main() {
 						if (enemy->health <= 0) {
 							enemy->life = false;
 							enemy->setDeadSprite(enemy->sprite.getRotation());
+							enemyDeathSound.play();
 							enemy->weapon.active = false;
 							weapons.push_back(enemy->weapon);
 						}
@@ -371,6 +454,7 @@ int main() {
 						if (player.health <= 0) {
 							player.life = false;
 							player.setDeadSprite(player.sprite.getRotation());
+							deathSound.play();
 							player.weapon.active = false;
 							weapons.push_back(player.weapon);
 						}
@@ -424,6 +508,7 @@ int main() {
 					enemy->seeYa = false;
 					enemy->countDontSeePlayer = 0;
 					enemy->barrier = false;
+					enemy->timeFromSeeYa = 0;
 				}
 
 				if (!enemy->barrier && enemy->seeYa) {
@@ -437,9 +522,11 @@ int main() {
 						enemy->goToCoords(player.x, player.y, grid, time);
 					else
 						enemy->goStright(player.x, player.y, time);
+					enemy->timeFromSeeYa += time;
+					enemy->rotate(player.x, player.y);
 					if (enemy->weapon.type == Gun) {
-						if (!enemy->isShoot) {
-							/*
+						if (!enemy->isShoot && enemy->timeFromSeeYa >= 2000) {
+							enemy->timeFromSeeYa = 0;
 							bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
 							float dest = getDistance(player.x, player.y, enemy->x, enemy->y);
 							if (dest >= 1000) {
@@ -460,8 +547,7 @@ int main() {
 							enemy->shoot();
 							stepSound.stop();
 							enemyStepSound.stop();
-							shootSound.play();
-							*/
+							shootSounds[getSoundId(player.weapon.name)].play();
 						}
 					}
 					else if (enemy->weapon.type == Melee) {
@@ -474,8 +560,6 @@ int main() {
 					}
 
 				}
-
-				//cout << enemy->seeYa << " " << enemy->barrier << endl;
 
 				// Противник идет по заданному пути
 				if ((!enemy->goToShootSound && !(enemy->dontSeeYaTime <= 20)) || !player.life) {
@@ -540,8 +624,24 @@ int main() {
 
 		for (it_ab = ammoBoxes.begin(); it_ab != ammoBoxes.end(); it_ab++) {
 			if (it_ab->getRect().intersects(player.getRect()) && player.weapon.type == Gun) {
-				player.weapon.ammoCount += it_ab->ammoCount;
-				ammoBoxes.erase(it_ab);
+				if (player.weapon.ammoCount < player.weapon.maxAmmoCount) {
+					player.weapon.ammoCount += (it_ab->ammoCount);
+					if (player.weapon.ammoCount > player.weapon.maxAmmoCount) player.weapon.ammoCount = player.weapon.maxAmmoCount;
+					stepSound.stop();
+					raiseItemSound.play();
+					ammoBoxes.erase(it_ab);
+					break;
+				}
+			}
+		}
+
+		for (it_hk = healthKits.begin(); it_hk != healthKits.end(); it_hk++) {
+			if (it_hk->getRect().intersects(player.getRect()) && player.health < 100) {
+				player.health += it_hk->healthCount;
+				if (player.health > 100) player.health = 100;
+				stepSound.stop();
+				healthKitSound.play();
+				healthKits.erase(it_hk);
 				break;
 			}
 		}
@@ -572,6 +672,11 @@ int main() {
 		for (it_ab = ammoBoxes.begin(); it_ab != ammoBoxes.end(); it_ab++) {
 			it_ab->update(time);
 			window.draw(it_ab->sprite);
+		}
+
+		for (it_hk = healthKits.begin(); it_hk != healthKits.end(); it_hk++) {
+			it_hk->update(time);
+			window.draw(it_hk->sprite);
 		}
 
 		// Рисуем мертвого игрока
