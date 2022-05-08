@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="71">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="77">
  <tileset firstgid="1" name="bacground0" tilewidth="16" tileheight="16" tilecount="1344" columns="56">
   <image source="resources/assets/Floor_tiles/bacground0.png" width="896" height="384"/>
  </tileset>
@@ -5019,8 +5019,11 @@
   <object id="7" name="solid" x="785.122" y="16.638" width="22.755" height="772.724"/>
   <object id="8" name="solid" x="-7.3775" y="14.638" width="22.755" height="772.724"/>
   <object id="13" name="player" x="113.625" y="267.625" width="32" height="32"/>
-  <object id="14" name="enemy" x="599.668" y="219.916" width="32" height="32"/>
+  <object id="14" name="1" type="enemy" x="599.668" y="219.916" width="32" height="32"/>
   <object id="26" name="1" type="track" x="331" y="268">
+   <properties>
+    <property name="enemyNum" value="1"/>
+   </properties>
    <point/>
   </object>
   <object id="47" name="solid" x="174.373" y="198.638" width="11.005" height="153.724"/>
@@ -5030,15 +5033,6 @@
   <object id="53" name="solid" x="654.873" y="178.888" width="10.255" height="124.906"/>
   <object id="54" name="solid" x="440.622" y="296.054" width="214.588" height="7.891"/>
   <object id="55" name="solid" x="441.456" y="134.054" width="166.65" height="11.891"/>
-  <object id="56" name="2" type="track" x="336" y="463">
-   <point/>
-  </object>
-  <object id="57" name="3" type="track" x="583" y="452">
-   <point/>
-  </object>
-  <object id="58" name="4" type="track" x="537" y="223">
-   <point/>
-  </object>
   <object id="59" name="bat" type="weapon" x="103" y="458" width="27" height="4">
    <properties>
     <property name="weaponType" value="melee"/>
@@ -5065,6 +5059,37 @@
    <properties>
     <property name="weaponType" value="gun"/>
    </properties>
+  </object>
+  <object id="71" name="2" type="enemy" x="301.333" y="90.6667" width="32" height="32"/>
+  <object id="72" name="2" type="track" x="345.333" y="372.667">
+   <properties>
+    <property name="enemyNum" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="73" name="3" type="track" x="583.333" y="434">
+   <properties>
+    <property name="enemyNum" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="74" name="4" type="track" x="516" y="242.667">
+   <properties>
+    <property name="enemyNum" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="75" name="1" type="track" x="313.333" y="526.667">
+   <properties>
+    <property name="enemyNum" value="2"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="76" name="2" type="track" x="242.667" y="124">
+   <properties>
+    <property name="enemyNum" value="2"/>
+   </properties>
+   <point/>
   </object>
  </objectgroup>
 </map>

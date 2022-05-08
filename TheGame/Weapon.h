@@ -56,9 +56,9 @@ class Weapon : public Item {
 private:
 	void setDamageAndAmmo() {
 		switch (name) {
-		case Shotgun: damage = 50; ammoCount = 12; maxAmmoCount = 12; break;
-		case Rifle: damage = 40; ammoCount = 20; maxAmmoCount = 20; break;
-		case Pistol: damage = 30; ammoCount = 30; maxAmmoCount = 30; break;
+		case Shotgun: damage = 30; ammoCount = 12; maxAmmoCount = 12; break;
+		case Rifle: damage = 30; ammoCount = 20; maxAmmoCount = 20; break;
+		case Pistol: damage = 25; ammoCount = 30; maxAmmoCount = 30; break;
 		case Pipe: damage = 25; ammoCount = 0; maxAmmoCount = 0; break;
 		case Bat: damage = 20; ammoCount = 0; maxAmmoCount = 0; break;
 		}

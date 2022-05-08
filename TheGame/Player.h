@@ -79,6 +79,9 @@ public:
 			}
 			updateLegs();
 		}
+		else {
+			health = 0;
+		}
 	}
 
 	void checkCollisionWithMap(float Dx, float Dy) {

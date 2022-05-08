@@ -22,7 +22,7 @@ public:
 	int dVec = 10;
 	float dontSeeYaTime = 5000;
 
-	Enemy(sf::Image & image, sf::Image& LegsImage, std::string Name, Level& lvl, float X, float Y, int W, int H, int num) : Person(image, LegsImage, Name, lvl, X, Y, W, H) {
+	Enemy(sf::Image & image, sf::Image& LegsImage, std::string Name, string enemyNum, Level& lvl, float X, float Y, int W, int H, int num) : Person(image, LegsImage, Name, lvl, X, Y, W, H) {
 		path_time = 2000;
 		isCollised = false;
 		go = true;
@@ -31,7 +31,12 @@ public:
 		isMove = false;
 		trackId = 0;
 		obj = lvl.GetObjects("solid");
-		tracks = lvl.GetObjectsWithType("track");
+		vector <tmx::Object> tracksAll = lvl.GetObjectsWithType("track");
+		for (int i = 0; i < tracksAll.size(); i++) {
+			if (tracksAll[i].getProperties()[0].getStringValue() == enemyNum) {
+				tracks.push_back(tracksAll[i]);
+			}
+		}
 		if (name == "Enemy") {
 			sprite.setTextureRect(sf::IntRect(90, 8, width, height));
 			sprite.setScale(2, 2);
