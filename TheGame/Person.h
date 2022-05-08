@@ -21,6 +21,7 @@ public:
 	Weapon weapon;
 	float health;
 	bool isShoot, isHit;
+	Person() {}
 	Person(sf::Image& personImage, sf::Image& LegsImage, std::string Name, Level& lev, float X, float Y, float W, float H) : Entity(personImage, Name, X, Y, W, H) {
 		legsTime = 0;
 		shootTime = 0;

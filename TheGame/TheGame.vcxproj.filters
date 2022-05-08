@@ -68,5 +68,17 @@
     <ClInclude Include="Menu.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="cScreen.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Screens.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenMenu.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenGame.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

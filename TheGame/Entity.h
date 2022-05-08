@@ -17,6 +17,7 @@ public:
 	bool isMove;
 	sf::Sprite sprite;
 	std::string name;
+	Entity() {}
 	Entity(sf::Image& image, std::string Name, float X, float Y, float W, float H) {
 		x = X, y = Y;
 		width = W, height = H;
@@ -29,6 +30,8 @@ public:
 		sprite.setPosition(x, y);
 		sprite.setOrigin(width / 2, height / 2);
 	}
+
+
 
 	void setPosition(float X, float Y) {
 		x = X, y = Y;

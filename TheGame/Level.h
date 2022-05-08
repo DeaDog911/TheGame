@@ -16,6 +16,7 @@ using namespace std;
 
 class Level {
 public:
+	Level() {}
 	Map map;
 	Level(string path) {
 		map.load(path);

@@ -148,6 +148,7 @@
     <ClInclude Include="AmmoBox.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="consts.h" />
+    <ClInclude Include="cScreen.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="HealthKit.h" />
@@ -158,6 +159,9 @@
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ScreenGame.h" />
+    <ClInclude Include="ScreenMenu.h" />
+    <ClInclude Include="Screens.h" />
     <ClInclude Include="SFMLOrthogonalLayer.h" />
     <ClInclude Include="view.h" />
     <ClInclude Include="Weapon.h" />
