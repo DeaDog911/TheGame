@@ -153,6 +153,7 @@
     <ClInclude Include="HealthKit.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="parse.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="Person.h" />

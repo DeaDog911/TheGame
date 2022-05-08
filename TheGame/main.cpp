@@ -24,6 +24,7 @@
 #include "Pathfinding.h"
 #include "AmmoBox.h"
 #include "HealthKit.h"
+#include "Menu.h"
 
 using namespace std;
 using namespace sf;
@@ -90,6 +91,8 @@ int main() {
 	//parse("map.tmx");
 	RenderWindow window(VideoMode(1380, 720), "Game");
 	window.setMouseCursorVisible(false);
+	menu(window);
+
 	view.reset(sf::FloatRect(0, 0, 1380, 720));
 
 	Level lvl("map.tmx");
@@ -289,13 +292,13 @@ int main() {
 	vector<pair<int, int>> path;
 	vector<pair<int, int> >::iterator path_i;
 	sf::Vector2f playerShootCoords;
-
+	bool showEscape = false;
 	bool leftMousePressed = false;
 	while (window.isOpen()) {
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
-
+		
 		pixelPos = Mouse::getPosition(window);
 		pos = window.mapPixelToCoords(pixelPos);
 		aim.setPosition(pos.x, pos.y);
@@ -366,7 +369,8 @@ int main() {
 						}
 						if (player.weapon.ammoCount == 0)
 							shootNoAmmoSound.play();
-					} else if (!player.isHit && player.weapon.type == Melee) {
+					}
+					else if (!player.isHit && player.weapon.type == Melee) {
 						player.hit();
 						stepSound.stop();
 						enemyStepSound.stop();
@@ -393,6 +397,9 @@ int main() {
 							}
 						}
 					}
+				}
+				if (Keyboard::isKeyPressed(Keyboard::Escape)) {
+					
 				}
 			}
 			if (event.type == Event::MouseButtonReleased) {
