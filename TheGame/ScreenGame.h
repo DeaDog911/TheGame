@@ -77,10 +77,14 @@ private:
 			escapeMenuTexts[i].setOrigin(escapeMenuTexts[i].getGlobalBounds().width / 2, escapeMenuTexts[i].getGlobalBounds().height / 2);
 		}
 	}
+
+	sf::Music backgroundMusic;
+	vector<string> maps;
 public:
 
-	ScreenGame() {
-
+	ScreenGame(vector<string> maps) {
+		backgroundMusic.openFromFile("audio/Bio-Unit-Level.wav");
+		this->maps = maps;
 	}
 
 	int startGame(RenderWindow& window, string map_file, bool next) {
@@ -301,6 +305,7 @@ public:
 		bool leftMousePressed = false;
 		bool showEndGame = false;
 		bool showExit = false;
+		bool goNextRoom = false;
 
 		sf::Text youDiedText;
 		youDiedText.setFont(ammoFont);
@@ -319,36 +324,89 @@ public:
 		endGameText.setCharacterSize(50);
 		endGameText.setString("YOU WIN");
 		endGameText.setOrigin(endGameText.getGlobalBounds().width / 2, endGameText.getGlobalBounds().height / 2);
+		
+		bool endGameExist;
+		tmx::Object endGameObj, nextRoomObj;
+		tmx::FloatRect endGame, nextRoom;
 
-		tmx::Object endGameObj = lvl.GetObject("endGame");
-		tmx::FloatRect endGame = endGameObj.getAABB();
+		if (lvl.objectExist("endGame")) {
+			endGameExist = true;
+			endGameObj = lvl.GetObject("endGame");
+			endGame = endGameObj.getAABB();
+		}
+		else {
+			endGameExist = false;
+			nextRoomObj = lvl.GetObject("nextRoom");
+			nextRoom = nextRoomObj.getAABB();
+		}
 
 		sf::Image exitImage;
 		sf::Texture exitTexture;
 		sf::Sprite exitSprite;
-		exitImage.loadFromFile("images/exit.png");
+
+		if (endGameExist)
+			exitImage.loadFromFile("images/exit.png");
+		else 
+			exitImage.loadFromFile("images/go.png");
+
 		exitTexture.loadFromImage(exitImage);
 		exitSprite.setTexture(exitTexture);
 		exitSprite.setScale(0.2, 0.2);
 		exitSprite.setOrigin(170, 0);
 
-		switch (atoi(endGameObj.getType().c_str())) {
-		case 1:
-			exitSprite.setPosition(endGame.left, endGame.top + endGame.height / 2);
-			exitSprite.setRotation(90);
-			break;
-		case 2:
-			exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top);
-			exitSprite.setRotation(180);
-			break;
-		case 3:
-			exitSprite.setPosition(endGame.left + endGame.width, endGame.top + endGame.height / 2);
-			exitSprite.setRotation(-90);
-			break;
-		case 4:
-			exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top + endGame.height);
-			break;
+		if (endGameExist) {
+			switch (atoi(endGameObj.getType().c_str())) {
+			case 1:
+				exitSprite.setPosition(endGame.left, endGame.top + endGame.height / 2);
+				exitSprite.setRotation(90);
+				break;
+			case 2:
+				exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top);
+				exitSprite.setRotation(180);
+				break;
+			case 3:
+				exitSprite.setPosition(endGame.left + endGame.width, endGame.top + endGame.height / 2);
+				exitSprite.setRotation(-90);
+				break;
+			case 4:
+				exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top + endGame.height);
+				break;
+			}
 		}
+		else {
+			switch (atoi(nextRoomObj.getType().c_str())) {
+			case 1:
+				exitSprite.setPosition(nextRoom.left, nextRoom.top + nextRoom.height / 2);
+				exitSprite.setRotation(90);
+				break;
+			case 2:
+				exitSprite.setPosition(nextRoom.left + nextRoom.width / 2, nextRoom.top);
+				exitSprite.setRotation(180);
+				break;
+			case 3:
+				exitSprite.setPosition(nextRoom.left + nextRoom.width, nextRoom.top + nextRoom.height / 2);
+				exitSprite.setRotation(-90);
+				break;
+			case 4:
+				exitSprite.setPosition(nextRoom.left + nextRoom.width / 2, nextRoom.top + nextRoom.height);
+				break;
+			}
+		}
+
+		sf::Image eButtonImage, controlsImage;
+		sf::Texture eButtonTexture, controlsTexture;
+		sf::Sprite eButtonSprite, controlsSprite;
+		eButtonImage.loadFromFile("images/E_button.png");
+		eButtonTexture.loadFromImage(eButtonImage);
+		eButtonSprite.setTexture(eButtonTexture);
+
+		controlsImage.loadFromFile("images/WASD.png");
+		controlsTexture.loadFromImage(controlsImage);
+		controlsSprite.setTexture(controlsTexture);
+		controlsSprite.setScale(0.5, 0.5);
+
+		bool showEButton = false;
+		bool showControls = false;
 
 		initializeEescapeMenu(ammoFont);
 
@@ -469,10 +527,14 @@ public:
 						}
 					}
 					if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-						if (showEscape)
+						if (showEscape) {
 							showEscape = false;
-						else
+							showControls = false;
+						}
+						else {
 							showEscape = true;
+							showControls = true;
+						}
 					}
 				}
 				if (event.type == Event::MouseButtonReleased) {
@@ -481,6 +543,17 @@ public:
 					}
 				}
 			}
+
+			showEButton = false;
+			for (it_w = weapons.begin(); it_w != weapons.end(); it_w++) {
+				Weapon weapon = *it_w;
+				if (!weapon.active) {
+					if (weapon.getRect().intersects(player.getRect())) {
+						showEButton = true;
+					}
+				}
+			}
+
 			sf::FloatRect rect;
 			sf::RectangleShape sh;
 			int i;
@@ -759,10 +832,17 @@ public:
 
 			if (livinEnemyAmount == 0) {
 				showExit = true;
-				if (player.getRect().intersects(sf::FloatRect(endGame.left, endGame.top, endGame.width, endGame.height))) {
-					showEscape = true;
-					showEndGame = true;
-					
+				if (endGameExist) {
+					if (player.getRect().intersects(sf::FloatRect(endGame.left, endGame.top, endGame.width, endGame.height))) {
+						showEscape = true;
+						showEndGame = true;
+					}
+				}
+				else {
+					if (player.getRect().intersects(sf::FloatRect(nextRoom.left, nextRoom.top, nextRoom.width, nextRoom.height))) {
+						return 10;
+					}
+					goNextRoom = true;
 				}
 			}
 
@@ -821,6 +901,15 @@ public:
 				window.draw(enemy->sprite);
 			}
 
+
+			if (showExit) {
+				window.draw(exitSprite);
+			}
+
+			if (goNextRoom) {
+				window.draw(exitSprite);
+			}
+
 			// Рисуем живого игрока
 			if (player.life) {
 				window.draw(player.legsSprite);
@@ -829,7 +918,6 @@ public:
 
 			// Рисуем пули
 			drawList(it, bullets, window);
-
 
 			if (player.weapon.type == Gun) {
 				window.draw(ammoSprite);
@@ -840,8 +928,10 @@ public:
 			window.draw(healthSprite);
 			window.draw(healthRect);
 
-			if (showExit) {
-				window.draw(exitSprite);
+			if (showEButton) {
+				eButtonSprite.setPosition(view.getCenter().x - 600, view.getCenter().y + 200);
+				eButtonSprite.setScale(0.7, 0.7);
+				window.draw(eButtonSprite);
 			}
 
 			if (showEscape) {
@@ -861,7 +951,10 @@ public:
 				}
 			}
 			
-			
+			if (showControls) {
+				controlsSprite.setPosition(view.getCenter().x + 350, view.getCenter().y - 200);
+				window.draw(controlsSprite);
+			}
 
 			if (showEndGame) {
 				endGameText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
@@ -871,6 +964,8 @@ public:
 				youDiedText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
 				window.draw(youDiedText);
 			}
+
+
 
 			window.draw(aim.sprite);
 
@@ -886,15 +981,14 @@ public:
 		return 0;
 	}
 
-	
-	int Run(sf::RenderWindow& window) {
-		string maps[2] = { 
-			"map.tmx",
-			"map_empty.tmx" 
-		};
+	int Run(sf::RenderWindow& window, int &map_i) {
+		backgroundMusic.play();
 		int res;
 		bool next = true;
-		for (int i = 0; i < 2;) {
+		for (int i = map_i; i < 2;) {
+			if (i == 1) next = false;
+			else next = true;
+
 			res = startGame(window, maps[i], next);
 			while (res == -10) {
 				res = startGame(window, maps[i], next);
@@ -904,9 +998,11 @@ public:
 				if (i == 1) next = false;
 			}
 			else {
+				backgroundMusic.stop();
 				return res;
 			}
 		}
+		backgroundMusic.stop();
 		return res;
 	}
 };

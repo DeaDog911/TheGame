@@ -21,6 +21,25 @@ public:
 	Level(string path) {
 		map.load(path);
 	}
+
+	bool objectExist(string name) {
+		const auto& layers = map.getLayers();
+		for (const auto& layer : layers)
+		{
+			if (layer->getType() == tmx::Layer::Type::Object)
+			{
+				const auto& objects = layer->getLayerAs<tmx::ObjectGroup>().getObjects();
+				for (const auto& object : objects)
+				{
+					if (object.getName() == name) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	const auto& GetObject(string name) {
 		const auto& layers = map.getLayers();
 		for (const auto& layer : layers)

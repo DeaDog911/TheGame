@@ -40,14 +40,20 @@ int main() {
 	std::vector<cScreen*> Screens;
 	int screen = 0;
 
-	ScreenMenu screenMenu;
+	vector<string> maps = {
+		"map.tmx",
+		"map_empty.tmx",
+	};
+
+	int map_i = 0;
+	ScreenMenu screenMenu(maps);
 	Screens.push_back(&screenMenu);
-	ScreenGame screenGame;
+	ScreenGame screenGame(maps);
 	Screens.push_back(&screenGame);
 
 
 	while(screen >= 0) {
-		screen = Screens[screen]->Run(window);
+		screen = Screens[screen]->Run(window, map_i);
 	}
 
 	return EXIT_SUCCESS;

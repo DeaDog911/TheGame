@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Audio/Music.hpp>
 
 class ScreenMenu : public cScreen {
 private:
@@ -117,8 +118,10 @@ private:
 	};
 	sf::Texture backgroundTextures[102];
 	int background_i;
+	sf::Music backgroundMusic;
+	vector <string> maps;
 public:
-	ScreenMenu() {
+	ScreenMenu(vector<string> maps) {
 		backgroundImage.loadFromFile("images/menu/menu_background2.jpg");
 		backgroundTexture.loadFromImage(backgroundImage);
 		for (int i = 0; i < 102; i++) {
@@ -128,8 +131,12 @@ public:
 			backgroundTextures[i] = backgroundTexture;
 		}
 		background_i = 0;
+
+		backgroundMusic.openFromFile("audioaBio-Unit-Ambient-Warning.wav");
+		backgroundMusic.setLoop(true);
+		this->maps = maps;
 	}
-	int Run(sf::RenderWindow& window) {
+	int Run(sf::RenderWindow& window, int &map_i) {
 		window.setView(window.getDefaultView());
 		bool showMenu = true;
 		backgroundSprite.setScale(2,2);
@@ -142,32 +149,56 @@ public:
 
 		sf::Font font;
 		font.loadFromFile("fonts/GUNPLAY_.ttf");
-		sf::Text startGameText;
-		startGameText.setFont(font);
-		startGameText.setCharacterSize(100);
-		startGameText.setString("START GAME");
-		startGameText.setOrigin(startGameText.getGlobalBounds().width / 2, startGameText.getGlobalBounds().height / 2);
-		startGameText.setPosition(window.getSize().x / 2, window.getSize().y / 2);
 
-		sf::Text exitText;
-		exitText.setFont(font);
-		exitText.setCharacterSize(100);
-		exitText.setString("EXIT");
-		exitText.setOrigin(exitText.getGlobalBounds().width / 2, exitText.getGlobalBounds().height / 2);
-		exitText.setPosition(window.getSize().x / 2, window.getSize().y / 2 + 150);
+		sf::Text menuTexts[3];
+		for (int i = 0; i < 3; i++) {\
+			sf::Text menuText;
+			menuText.setFont(font);
+			menuText.setCharacterSize(100);
+			menuText.setPosition(window.getSize().x / 2, window.getSize().y / 2 + i * 120);
+			menuText.setFillColor(sf::Color(255, 100, 20));
+			menuText.setOutlineThickness(3);
+			menuText.setOutlineColor(sf::Color(0, 0, 0));
+			menuTexts[i] = menuText;
+		}
 
-		startGameText.setFillColor(sf::Color(255, 100, 20));
-		startGameText.setOutlineThickness(3);
-		startGameText.setOutlineColor(sf::Color(0, 0, 0));
+		menuTexts[0].setString("START GAME");
+		menuTexts[1].setString("SELECT LEVEL");
+		menuTexts[2].setString("EXIT");
 
-		exitText.setFillColor(sf::Color(255, 100, 20));
-		exitText.setOutlineThickness(3);
-		exitText.setOutlineColor(sf::Color(0, 0, 0));
+		for (int i = 0; i < 3; i++) {
+			menuTexts[i].setOrigin(menuTexts[i].getGlobalBounds().width / 2, menuTexts[i].getGlobalBounds().height / 2);
+		}
+
+		const int levelCount = maps.size() + 1;
+		sf::Text selectLevelTexts[3];
+		for (int i = 0; i < 3; i++) {
+				sf::Text menuText;
+				menuText.setFont(font);
+				menuText.setCharacterSize(70);
+				menuText.setPosition(window.getSize().x / 2, window.getSize().y / 2 + i * 100);
+				menuText.setFillColor(sf::Color(255, 100, 20));
+				menuText.setOutlineThickness(3);
+				menuText.setOutlineColor(sf::Color(0, 0, 0));
+				selectLevelTexts[i] = menuText;
+		}
+
+		selectLevelTexts[0].setString("LEVEL 1");
+		selectLevelTexts[1].setString("LEVEL 2");
+		selectLevelTexts[2].setString("BACK");
+
+		for (int i = 0; i < 3; i++) {
+			selectLevelTexts[i].setOrigin(selectLevelTexts[i].getGlobalBounds().width / 2, selectLevelTexts[i].getGlobalBounds().height / 2);
+		}
 
 		sf::Vector2i pixelPos;
 		sf::Vector2f pos;
 		Clock clock;
 		float backgroundTime = 0;
+
+		backgroundMusic.play();
+
+		bool showSelectLevel = false;
 		while (showMenu) {
 			float time = clock.getElapsedTime().asMicroseconds();
 			clock.restart();
@@ -177,33 +208,66 @@ public:
 			pos = window.mapPixelToCoords(pixelPos);
 			aimSprite.setPosition(pos.x, pos.y);
 
-			if (startGameText.getGlobalBounds().contains(pos.x, pos.y)) {
-				startGameText.setFillColor(sf::Color(255, 0, 0));
-				aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
-			}
-			else if (exitText.getGlobalBounds().contains(pos.x, pos.y)) {
-				exitText.setFillColor(sf::Color(255, 0, 0));
-				aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+			if (!showSelectLevel) {
+				for (int i = 0; i < 3; i++) {
+					if (menuTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
+						menuTexts[i].setFillColor(sf::Color(255, 0, 0));
+						aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+					}
+					else {
+						menuTexts[i].setFillColor(sf::Color(255, 100, 20));
+						aimSprite.setTextureRect(sf::IntRect(61, 39, 250, 249));
+					}
+				}
 			}
 			else {
-				startGameText.setFillColor(sf::Color(255, 100, 20));
-				exitText.setFillColor(sf::Color(255, 100, 20));
-				aimSprite.setTextureRect(sf::IntRect(61, 39, 250, 249));
+				for (int i = 0; i < 3; i++) {
+					if (selectLevelTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
+						selectLevelTexts[i].setFillColor(sf::Color(255, 0, 0));
+						aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+					}
+					else {
+						selectLevelTexts[i].setFillColor(sf::Color(255, 100, 20));
+						aimSprite.setTextureRect(sf::IntRect(61, 39, 250, 249));
+					}
+				}
 			}
+
 			sf::Event event;
 			while (window.pollEvent(event)) {
 				if (event.type == sf::Event::MouseButtonPressed) {
 					if (event.key.code == sf::Mouse::Left) {
-
-						if (startGameText.getGlobalBounds().contains(pos.x, pos.y)) {
-							aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
-							showMenu = false;
-							return 1;
+						if (!showSelectLevel) {
+							if (menuTexts[0].getGlobalBounds().contains(pos.x, pos.y)) {
+								aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+								showMenu = false;
+								backgroundMusic.stop();
+								return 1;
+							}
+							else if (menuTexts[1].getGlobalBounds().contains(pos.x, pos.y)) {
+								showSelectLevel = true;
+							}
+							else if (menuTexts[2].getGlobalBounds().contains(pos.x, pos.y)) {
+								aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+								showMenu = false;
+								window.close();
+							}
 						}
-						else if (exitText.getGlobalBounds().contains(pos.x, pos.y)) {
-							aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
-							showMenu = false;
-							window.close();
+						else {
+							for (int i = 0; i < 2; i++) {
+								if (selectLevelTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
+									aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+									showMenu = false;
+									showSelectLevel = false;
+									backgroundMusic.stop();
+									map_i = i;
+									return 1;
+								}
+							}
+							if (selectLevelTexts[2].getGlobalBounds().contains(pos.x, pos.y)) {
+								aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
+								showSelectLevel = false;
+							}
 						}
 					}
 				}
@@ -212,8 +276,18 @@ public:
 			window.clear();
 			backgroundSprite.setTexture(backgroundTextures[background_i]);
 			window.draw(backgroundSprite);
-			window.draw(startGameText);
-			window.draw(exitText);
+
+			if (!showSelectLevel) {
+				for (int i = 0; i < 3; i++) {
+					window.draw(menuTexts[i]);
+				}
+			}
+			else {
+				for (int i = 0; i < 3; i++) {
+					window.draw(selectLevelTexts[i]);
+				}
+			}
+
 			window.draw(aimSprite);
 			window.display();
 
