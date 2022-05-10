@@ -47,25 +47,35 @@ private:
 		soundCircle.setPosition(sf::Vector2f(x, y));
 		return soundCircle;
 	}
-
-	sf::Text escapeExitText;
+	
+	sf::Text escapeMenuTexts[3];
 	sf::RectangleShape escapeRect;
 	sf::RectangleShape escapeBackgroundRect;
 
 	void initializeEescapeMenu(sf::Font &font) {
-		
 		escapeRect.setSize(sf::Vector2f(500, 300));
 		escapeRect.setFillColor(sf::Color(64, 64, 64));
 		escapeRect.setOutlineColor(sf::Color(255, 255, 255));
 		escapeRect.setOutlineThickness(10);
 		escapeRect.setOrigin(escapeRect.getGlobalBounds().width / 2, escapeRect.getGlobalBounds().height / 2);
-
 		escapeBackgroundRect.setFillColor(sf::Color(96, 96, 96, 150));
-		escapeExitText.setFont(font);
-		escapeExitText.setCharacterSize(40);
-		escapeExitText.setString("MAIN MENU");
-		escapeExitText.setOrigin(escapeExitText.getGlobalBounds().width / 2, escapeExitText.getGlobalBounds().height / 2);
-		escapeExitText.setFillColor(sf::Color(255, 255, 255));
+
+		for (int i = 0; i < 3; i++) {
+			sf::Text escapeMenuText;
+			escapeMenuText.setFont(font);
+			escapeMenuText.setCharacterSize(40);
+			escapeMenuText.setFillColor(sf::Color(255, 255, 255));
+			escapeMenuText.setOutlineColor(sf::Color(0, 0, 0));
+			escapeMenuText.setOutlineThickness(2);
+			escapeMenuTexts[i] = escapeMenuText;
+		}
+		escapeMenuTexts[0].setString("NEXT LEVEL");
+		escapeMenuTexts[1].setString("RESTART LEVEL");
+		escapeMenuTexts[2].setString("MAIN MENU");
+
+		for (int i = 0; i < 3; i++) {
+			escapeMenuTexts[i].setOrigin(escapeMenuTexts[i].getGlobalBounds().width / 2, escapeMenuTexts[i].getGlobalBounds().height / 2);
+		}
 	}
 public:
 
@@ -73,7 +83,7 @@ public:
 
 	}
 
-	int Run(sf::RenderWindow& window) {
+	int startGame(RenderWindow& window, string map_file, bool next) {
 		int** grid = new int* [MAP_H];
 		for (int i = 0; i < MAP_H; i++) {
 			grid[i] = new int[MAP_W];
@@ -87,7 +97,7 @@ public:
 
 		view.reset(sf::FloatRect(0, 0, 1380, 720));
 
-		Level lvl("map.tmx");
+		Level lvl(map_file);
 		MapLayer layer0(lvl.map, 0);
 		MapLayer layer1(lvl.map, 1);
 		MapLayer layer2(lvl.map, 2);
@@ -205,7 +215,7 @@ public:
 		bulletHitSound.setBuffer(bulletHitSoundBuffer);
 
 		Image playerImage, legsImage;
-		playerImage.loadFromFile("images/player.png");
+		playerImage.loadFromFile("images/player_shotgun.png");
 		legsImage.loadFromFile("images/legs.png");
 		Object playerObj = lvl.GetObject("player");
 		Player player(playerImage, legsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
@@ -225,7 +235,8 @@ public:
 		healthKitImage.loadFromFile("images/health_kit.png");
 		healthKitTexture.loadFromImage(healthKitImage);
 
-		Weapon wp(weaponsTexture, Gun, Shotgun);
+		string weaponString = playerObj.getProperties()[0].getStringValue();
+		Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
 		player.takeWeapon(wp);
 
 		Image bulletImage;
@@ -234,7 +245,8 @@ public:
 		vector <Object> enemiesObj = lvl.GetObjectsWithType("enemy");
 		for (int i = 0; i < enemiesObj.size(); i++) {
 			Enemy* enemy = new Enemy(playerImage, legsImage, "Enemy", enemiesObj[i].getName(), lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
-			Weapon wp(weaponsTexture, Gun, Shotgun);
+			string weaponString = enemiesObj[i].getProperties()[0].getStringValue();
+			Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
 			enemy->takeWeapon(wp);
 			enemies.push_back(enemy);
 		}
@@ -284,8 +296,59 @@ public:
 		vector<pair<int, int>> path;
 		vector<pair<int, int> >::iterator path_i;
 		sf::Vector2f playerShootCoords;
+
 		bool showEscape = false;
 		bool leftMousePressed = false;
+		bool showEndGame = false;
+		bool showExit = false;
+
+		sf::Text youDiedText;
+		youDiedText.setFont(ammoFont);
+		youDiedText.setFillColor(sf::Color(255, 0, 0));
+		youDiedText.setOutlineColor(sf::Color(0, 0, 0));
+		youDiedText.setOutlineThickness(2);
+		youDiedText.setCharacterSize(50);
+		youDiedText.setString("YOU DIED");
+		youDiedText.setOrigin(youDiedText.getGlobalBounds().width / 2, youDiedText.getGlobalBounds().height / 2);
+
+		sf::Text endGameText;
+		endGameText.setFont(ammoFont);
+		endGameText.setFillColor(sf::Color(91, 76, 255));
+		endGameText.setOutlineColor(sf::Color(0, 0, 0));
+		endGameText.setOutlineThickness(2);
+		endGameText.setCharacterSize(50);
+		endGameText.setString("YOU WIN");
+		endGameText.setOrigin(endGameText.getGlobalBounds().width / 2, endGameText.getGlobalBounds().height / 2);
+
+		tmx::Object endGameObj = lvl.GetObject("endGame");
+		tmx::FloatRect endGame = endGameObj.getAABB();
+
+		sf::Image exitImage;
+		sf::Texture exitTexture;
+		sf::Sprite exitSprite;
+		exitImage.loadFromFile("images/exit.png");
+		exitTexture.loadFromImage(exitImage);
+		exitSprite.setTexture(exitTexture);
+		exitSprite.setScale(0.2, 0.2);
+		exitSprite.setOrigin(170, 0);
+
+		switch (atoi(endGameObj.getType().c_str())) {
+		case 1:
+			exitSprite.setPosition(endGame.left, endGame.top + endGame.height / 2);
+			exitSprite.setRotation(90);
+			break;
+		case 2:
+			exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top);
+			exitSprite.setRotation(180);
+			break;
+		case 3:
+			exitSprite.setPosition(endGame.left + endGame.width, endGame.top + endGame.height / 2);
+			exitSprite.setRotation(-90);
+			break;
+		case 4:
+			exitSprite.setPosition(endGame.left + endGame.width / 2, endGame.top + endGame.height);
+			break;
+		}
 
 		initializeEescapeMenu(ammoFont);
 
@@ -346,9 +409,16 @@ public:
 				}
 				if (event.type == Event::MouseButtonPressed) {
 					if (showEscape) {
-						if (escapeExitText.getGlobalBounds().contains(pos.x, pos.y)) {
+						if (escapeMenuTexts[0].getGlobalBounds().contains(pos.x, pos.y)) {
+							return 10;
+						}
+						if (escapeMenuTexts[1].getGlobalBounds().contains(pos.x, pos.y)) {
+							return -10;
+						}
+						if (escapeMenuTexts[2].getGlobalBounds().contains(pos.x, pos.y)) {
 							return 0;
 						}
+						
 					}
 					if (event.key.code == Mouse::Left && player.life) {
 						leftMousePressed = true;
@@ -451,6 +521,7 @@ public:
 										deathSound.play();
 										player.weapon.active = false;
 										weapons.push_back(player.weapon);
+										showEscape = true;
 									}
 								}
 							}
@@ -489,6 +560,7 @@ public:
 								deathSound.play();
 								player.weapon.active = false;
 								weapons.push_back(player.weapon);
+								showEscape = true;
 							}
 						}
 					}
@@ -558,7 +630,6 @@ public:
 						enemy->rotate(player.x, player.y);
 						if (enemy->weapon.type == Gun) {
 							if (!enemy->isShoot && enemy->timeFromSeeYa >= 2000) {
-								enemy->timeFromSeeYa = 0;
 								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
 								if (enemy->weapon.name == Shotgun) {
 									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x - 15, player.y - 15, i));
@@ -631,8 +702,12 @@ public:
 				}
 			}
 
+			int livinEnemyAmount = 0;
+
 			for (it = enemies.begin(); it != enemies.end(); it++) {
 				(*it)->update(time);
+				if ((*it)->life)
+					livinEnemyAmount++;
 				if ((*it)->isMove) {
 					if (enemyStepSound.getStatus() != sf::SoundSource::Status::Playing && stepSound.getStatus() != sf::SoundSource::Status::Playing) {
 						enemyStepSound.setPitch(1.1f);
@@ -682,6 +757,15 @@ public:
 				}
 			}
 
+			if (livinEnemyAmount == 0) {
+				showExit = true;
+				if (player.getRect().intersects(sf::FloatRect(endGame.left, endGame.top, endGame.width, endGame.height))) {
+					showEscape = true;
+					showEndGame = true;
+					
+				}
+			}
+
 			updateList(it, bullets, time);
 
 			player.rotate(aim.x, aim.y);
@@ -693,11 +777,13 @@ public:
 				}
 			}
 
-			if (escapeExitText.getGlobalBounds().contains(pos.x, pos.y)) {
-				escapeExitText.setFillColor(sf::Color(194, 194, 194));
-			}
-			else {
-				escapeExitText.setFillColor(sf::Color(255, 255, 255));
+			for (int i = 0; i < 3; i++) {
+				if (escapeMenuTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
+					escapeMenuTexts[i].setFillColor(sf::Color(194, 194, 194));
+				}
+				else {
+					escapeMenuTexts[i].setFillColor(sf::Color(255, 255, 255));
+				}
 			}
 
 			window.setView(view);
@@ -743,7 +829,7 @@ public:
 
 			// Рисуем пули
 			drawList(it, bullets, window);
-			
+
 
 			if (player.weapon.type == Gun) {
 				window.draw(ammoSprite);
@@ -754,14 +840,36 @@ public:
 			window.draw(healthSprite);
 			window.draw(healthRect);
 
+			if (showExit) {
+				window.draw(exitSprite);
+			}
+
 			if (showEscape) {
-				escapeExitText.setPosition(view.getCenter().x, view.getCenter().y - 20);
-				//escapeBackgroundRect.setPosition(view.getCenter().x, view.getCenter().y);
 				escapeBackgroundRect.setSize(sf::Vector2f(view.getSize().x, view.getSize().y));
+				escapeBackgroundRect.setPosition(view.getCenter().x, view.getCenter().y);
+				escapeBackgroundRect.setOrigin(view.getSize().x / 2, view.getSize().y / 2);
 				escapeRect.setPosition(view.getCenter().x, view.getCenter().y);
+
 				window.draw(escapeBackgroundRect);
 				window.draw(escapeRect);
-				window.draw(escapeExitText);
+
+				for (int i = 0; i < 3; i++) {
+					if ((i == 0 && !showEndGame) || (i == 0 && !next))
+						continue;
+					escapeMenuTexts[i].setPosition(view.getCenter().x, view.getCenter().y - 70 + i * 60);
+					window.draw(escapeMenuTexts[i]);
+				}
+			}
+			
+			
+
+			if (showEndGame) {
+				endGameText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
+				player.canMove = false;
+				window.draw(endGameText);
+			}else if (!player.life) {
+				youDiedText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
+				window.draw(youDiedText);
 			}
 
 			window.draw(aim.sprite);
@@ -776,5 +884,29 @@ public:
 		delete[] grid;
 
 		return 0;
+	}
+
+	
+	int Run(sf::RenderWindow& window) {
+		string maps[2] = { 
+			"map.tmx",
+			"map_empty.tmx" 
+		};
+		int res;
+		bool next = true;
+		for (int i = 0; i < 2;) {
+			res = startGame(window, maps[i], next);
+			while (res == -10) {
+				res = startGame(window, maps[i], next);
+			}
+			if (res == 10) {
+				i++;
+				if (i == 1) next = false;
+			}
+			else {
+				return res;
+			}
+		}
+		return res;
 	}
 };

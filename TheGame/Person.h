@@ -9,6 +9,7 @@ protected:
 	float shootTime;
 	float legsTime;
 	const float personSpeed = 0.2;
+	sf::Image killedImage;
 private:
 	sf::Texture legsTexture;
 	float dt;
@@ -119,8 +120,7 @@ public:
 	}
 
 	void setDeadSprite(float angle) {
-		image.loadFromFile("images/killed_person.png");
-		texture.loadFromImage(image);
+		texture.loadFromImage(killedImage);
 		isMove = false;
 		sprite.setTexture(texture);
 		sprite.setPosition(x, y);
@@ -157,9 +157,9 @@ public:
 			}
 			else if (weapon.name == Pistol) {
 				sf::IntRect rects[3] = {
-				sf::IntRect(1, 6, 41, 13),
+				sf::IntRect(0, 6, 42, 13),
 				sf::IntRect(45, 5, 43, 14),
-				sf::IntRect(89, 6, 35, 13),
+				sf::IntRect(88, 6, 36, 13),
 				};
 				int i = int(shootTime / shootDt);
 				if (i >= 3) {
@@ -244,4 +244,5 @@ public:
 		shootTime = 0;
 	}
 
+	virtual std::string getPlayerSpriteFile(WeaponName name) = 0;
 };

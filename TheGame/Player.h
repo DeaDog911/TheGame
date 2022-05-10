@@ -11,6 +11,7 @@ private:
 	enum { left, right, up, down, stay, right_up, right_down, left_up, left_down } state;
 public:
 	float soundCircleRadius = 300.f;
+	bool canMove;
 	Player(Image& playerImage, Image& LegsImage, string Name, Level& lev, float X, float Y, float W, float H) : Person(playerImage, LegsImage, Name, lev, X, Y, W, H) {
 		state = stay;
 		sprite.setTextureRect(sf::IntRect(90, 8, width, height));
@@ -18,6 +19,8 @@ public:
 		sprite.setScale(2, 2);
 		height *= 2;
 		width = height;
+		canMove = true;
+		killedImage.loadFromFile("images/killed_player.png");
 	}
 
 	void control() {
@@ -51,7 +54,7 @@ public:
 	}
 
 	void update(float time) {
-		if (life) {
+		if (life && canMove) {
 			control();
 			switch (state)
 			{
@@ -81,6 +84,16 @@ public:
 		}
 		else {
 			health = 0;
+		}
+	}
+
+	string getPlayerSpriteFile(WeaponName name) {
+		switch (name) {
+		case Shotgun: return "images/player_shotgun.png";
+		case Pipe: return "images/player_pipe.png";
+		case Bat: return "images/player_bat.png";
+		case Rifle: return "images/player_rifle.png";
+		case Pistol: return "images/player_pistol.png";
 		}
 	}
 

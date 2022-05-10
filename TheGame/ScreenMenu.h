@@ -116,18 +116,16 @@ private:
 		"images/background/frame_101_delay-0.06s.png",
 	};
 	sf::Texture backgroundTextures[102];
-	sf::Texture texture;
 	int background_i;
 public:
 	ScreenMenu() {
 		backgroundImage.loadFromFile("images/menu/menu_background2.jpg");
 		backgroundTexture.loadFromImage(backgroundImage);
-		//backgroundSprite.setTexture(backgroundTexture);
 		for (int i = 0; i < 102; i++) {
 			sf::Image image;
 			image.loadFromFile(background[i]);
-			texture.loadFromImage(image);
-			backgroundTextures[i] = texture;
+			backgroundTexture.loadFromImage(image);
+			backgroundTextures[i] = backgroundTexture;
 		}
 		background_i = 0;
 	}
@@ -218,6 +216,7 @@ public:
 			window.draw(exitText);
 			window.draw(aimSprite);
 			window.display();
+
 			if (backgroundTime > 50) {
 				background_i++;
 				backgroundTime = 0;

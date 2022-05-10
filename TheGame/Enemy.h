@@ -44,6 +44,18 @@ public:
 		height *= 1.5;
 		width = height;
 		timeFromSeeYa = 0;
+
+		killedImage.loadFromFile("images/killed_enemy.png");
+	}
+
+	string getPlayerSpriteFile(WeaponName name) {
+		switch (name) {
+		case Shotgun: return "images/enemy_shotgun.png";
+		case Pipe: return "images/enemy_pipe.png";
+		case Bat: return "images/enemy_bat.png";
+		case Rifle: return "images/enemy_rifle.png";
+		case Pistol: return "images/enemy_pistol.png";
+		}
 	}
 
 	void goThePath(int ** grid, float time) {

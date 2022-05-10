@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="77">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="79">
  <tileset firstgid="1" name="bacground0" tilewidth="16" tileheight="16" tilecount="1344" columns="56">
   <image source="resources/assets/Floor_tiles/bacground0.png" width="896" height="384"/>
  </tileset>
@@ -5018,8 +5018,16 @@
   <object id="6" name="solid" x="1.1225" y="784.638" width="801.755" height="14.7241"/>
   <object id="7" name="solid" x="785.122" y="16.638" width="22.755" height="772.724"/>
   <object id="8" name="solid" x="-7.3775" y="14.638" width="22.755" height="772.724"/>
-  <object id="13" name="player" x="113.625" y="267.625" width="32" height="32"/>
-  <object id="14" name="1" type="enemy" x="599.668" y="219.916" width="32" height="32"/>
+  <object id="13" name="player" x="113.625" y="267.625" width="32" height="32">
+   <properties>
+    <property name="weaponName" value="shotgun"/>
+   </properties>
+  </object>
+  <object id="14" name="1" type="enemy" x="599.668" y="219.916" width="32" height="32">
+   <properties>
+    <property name="weaponName" value="pistol"/>
+   </properties>
+  </object>
   <object id="26" name="1" type="track" x="331" y="268">
    <properties>
     <property name="enemyNum" value="1"/>
@@ -5060,7 +5068,11 @@
     <property name="weaponType" value="gun"/>
    </properties>
   </object>
-  <object id="71" name="2" type="enemy" x="301.333" y="90.6667" width="32" height="32"/>
+  <object id="71" name="2" type="enemy" x="301.333" y="90.6667" width="32" height="32">
+   <properties>
+    <property name="weaponName" value="rifle"/>
+   </properties>
+  </object>
   <object id="72" name="2" type="track" x="345.333" y="372.667">
    <properties>
     <property name="enemyNum" value="1"/>
@@ -5091,5 +5103,6 @@
    </properties>
    <point/>
   </object>
+  <object id="77" name="endGame" type="1" x="694.667" y="700.666" width="66" height="62.6667"/>
  </objectgroup>
 </map>

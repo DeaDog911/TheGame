@@ -14,6 +14,15 @@ WeaponName getEnumIndex(string name) {
 	if (name == "pipe") return Pipe;
 }
 
+WeaponType getWeaponType(string name) {
+	if (name == "shotgun" || name == "pistol" || name == "rifle") {
+		return Gun;
+	}
+	else if (name == "Bat" || name == "Pipe") {
+		return Melee;
+	}
+}
+
 sf::IntRect getWeaponTextureRect(WeaponName name) {
 	switch (name) {
 		case Pistol: return sf::IntRect(444, 22, 13, 6);
@@ -24,23 +33,13 @@ sf::IntRect getWeaponTextureRect(WeaponName name) {
 	}
 }
 
-string getPlayerSpriteFile(WeaponName name) {
-	switch (name) {
-	case Shotgun: return "images/player_shotgun.png";
-	case Pipe: return "images/player_pipe.png";
-	case Bat: return "images/player_bat.png";
-	case Rifle: return "images/player_rifle.png";
-	case Pistol: return "images/player_pistol.png";
-	}
-}
-
 sf::IntRect getPlayerTextureRect(WeaponName name) {
 	switch (name) {
 	case Shotgun: return sf::IntRect(90, 8, 32, 18);
 	case Pipe: return sf::IntRect(82, 23, 16, 31);
 	case Bat: return sf::IntRect(82, 23, 16, 31);
 	case Rifle: return sf::IntRect(49, 8, 29, 17);
-	case Pistol: return sf::IntRect(89, 6, 35, 13);
+	case Pistol: return sf::IntRect(88, 6, 36, 13);
 	}
 }
 
