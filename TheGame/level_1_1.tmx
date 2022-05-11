@@ -5,6 +5,16 @@
  <tileset firstgid="1354" source="resources/sprWallBrickH.tsx"/>
  <tileset firstgid="1355" source="resources/sprWallBrickV.tsx"/>
  <tileset firstgid="1356" source="resources/decorative.tsx"/>
+ <tileset firstgid="1612" source="resources/sprGlassPanelV.tsx"/>
+ <tileset firstgid="1614" source="resources/dungeon-tileset.tsx"/>
+ <tileset firstgid="1911" source="resources/mainlevbuild.tsx"/>
+ <tileset firstgid="4471" source="resources/preview-simple-dungeon-crawler-set1.tsx"/>
+ <tileset firstgid="4783" source="resources/preview-top-down-sci-fi.tsx"/>
+ <tileset firstgid="4981" source="resources/tileset-top-down-sci-fi.tsx"/>
+ <tileset firstgid="5179" source="resources/top-down-town-tileset.tsx"/>
+ <tileset firstgid="5464" name="Ambush" tilewidth="16" tileheight="16" tilecount="1155" columns="33">
+  <image source="resources/assets2/Ambush.png" width="534" height="566"/>
+ </tileset>
  <layer id="1" name="Слой тайлов 1" width="150" height="100">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
