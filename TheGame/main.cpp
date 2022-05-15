@@ -41,6 +41,7 @@ int main() {
 	int screen = 0;
 
 	vector<string> maps = {
+		"level_1_1.tmx",
 		"map.tmx",
 		"map_empty.tmx",
 	};

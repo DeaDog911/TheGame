@@ -12,7 +12,7 @@ public:
 		animationUp = false;
 		sprite.setTexture(texture);
 		sprite.setTextureRect(sf::IntRect(100, 49, 431, 381));
-		sprite.setScale(0.05, 0.05);
+		sprite.setScale(0.05 / 2, 0.05 / 2);
 		width = 431 * 0.05;
 		height = 381 * 0.05;
 	}

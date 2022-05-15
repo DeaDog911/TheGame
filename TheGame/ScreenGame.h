@@ -6,7 +6,7 @@ public:
 	Aim(Image& image, string Name, float X, float Y, float W, float H) : Entity(image, Name, X, Y, W, H) {
 		image.createMaskFromColor(Color(255, 255, 255));
 		sprite.setOrigin(width / 2, height / 2);
-		sprite.setScale(0.75, 0.75);
+		sprite.setScale(0.5, 0.5);
 	}
 
 	void update(float time) {}
@@ -53,20 +53,20 @@ private:
 	sf::RectangleShape escapeBackgroundRect;
 
 	void initializeEescapeMenu(sf::Font &font) {
-		escapeRect.setSize(sf::Vector2f(500, 300));
+		escapeRect.setSize(sf::Vector2f(500 / zoom_k, 300 / zoom_k));
 		escapeRect.setFillColor(sf::Color(64, 64, 64));
 		escapeRect.setOutlineColor(sf::Color(255, 255, 255));
-		escapeRect.setOutlineThickness(10);
+		escapeRect.setOutlineThickness(10 / zoom_k);
 		escapeRect.setOrigin(escapeRect.getGlobalBounds().width / 2, escapeRect.getGlobalBounds().height / 2);
 		escapeBackgroundRect.setFillColor(sf::Color(96, 96, 96, 150));
 
 		for (int i = 0; i < 3; i++) {
 			sf::Text escapeMenuText;
 			escapeMenuText.setFont(font);
-			escapeMenuText.setCharacterSize(40);
+			escapeMenuText.setCharacterSize(40 / zoom_k);
 			escapeMenuText.setFillColor(sf::Color(255, 255, 255));
 			escapeMenuText.setOutlineColor(sf::Color(0, 0, 0));
-			escapeMenuText.setOutlineThickness(2);
+			escapeMenuText.setOutlineThickness(1);
 			escapeMenuTexts[i] = escapeMenuText;
 		}
 		escapeMenuTexts[0].setString("NEXT LEVEL");
@@ -80,6 +80,7 @@ private:
 
 	sf::Music backgroundMusic;
 	vector<string> maps;
+	const float zoom_k = 2;
 public:
 
 	ScreenGame(vector<string> maps) {
@@ -98,13 +99,17 @@ public:
 				grid[i][j] = -1;
 			}
 		}
-
+		
 		view.reset(sf::FloatRect(0, 0, 1380, 720));
+		
+		view.zoom(1 / zoom_k);
 
 		Level lvl(map_file);
+
 		MapLayer layer0(lvl.map, 0);
 		MapLayer layer1(lvl.map, 1);
 		MapLayer layer2(lvl.map, 2);
+		MapLayer layer3(lvl.map, 3);
 
 		std::list<Entity*> enemies;
 		std::list<Entity*>::iterator it;
@@ -132,7 +137,7 @@ public:
 
 		sf::Text ammoText;
 		ammoText.setFont(ammoFont);
-		ammoText.setCharacterSize(63);
+		ammoText.setCharacterSize(63 / zoom_k);
 		ammoText.setOrigin(ammoText.getGlobalBounds().width / 2, ammoText.getGlobalBounds().height / 2);
 		ammoText.setFillColor(sf::Color(255, 42, 0));
 		ammoText.setOutlineThickness(3);
@@ -145,13 +150,13 @@ public:
 		healthTexture.loadFromImage(healthImage);
 		healthSprite.setTexture(healthTexture);
 		healthSprite.setTextureRect(sf::IntRect(159, 319, 881, 97));
-		float scale_k = 0.3;
+		float scale_k = 0.3 / zoom_k;
 		healthSprite.setScale(scale_k, scale_k);
 
 		sf::RectangleShape healthRect;
 		healthRect.setFillColor(Color(64, 64, 64));
-		healthRect.setSize(sf::Vector2f(847 * scale_k, 65 * scale_k));
-		healthRect.setScale(-1, 1);
+		healthRect.setSize(sf::Vector2f(847 * scale_k , 65 * scale_k));
+		healthRect.setScale(-1 / zoom_k, 1 / zoom_k);
 
 		sf::Sound shootSound;
 		sf::SoundBuffer shootBuffer, stepBuffer;
@@ -311,8 +316,8 @@ public:
 		youDiedText.setFont(ammoFont);
 		youDiedText.setFillColor(sf::Color(255, 0, 0));
 		youDiedText.setOutlineColor(sf::Color(0, 0, 0));
-		youDiedText.setOutlineThickness(2);
-		youDiedText.setCharacterSize(50);
+		youDiedText.setOutlineThickness(2 / zoom_k);
+		youDiedText.setCharacterSize(50 / zoom_k);
 		youDiedText.setString("YOU DIED");
 		youDiedText.setOrigin(youDiedText.getGlobalBounds().width / 2, youDiedText.getGlobalBounds().height / 2);
 
@@ -320,8 +325,8 @@ public:
 		endGameText.setFont(ammoFont);
 		endGameText.setFillColor(sf::Color(91, 76, 255));
 		endGameText.setOutlineColor(sf::Color(0, 0, 0));
-		endGameText.setOutlineThickness(2);
-		endGameText.setCharacterSize(50);
+		endGameText.setOutlineThickness(2 / zoom_k);
+		endGameText.setCharacterSize(50 / zoom_k);
 		endGameText.setString("YOU WIN");
 		endGameText.setOrigin(endGameText.getGlobalBounds().width / 2, endGameText.getGlobalBounds().height / 2);
 		
@@ -351,7 +356,7 @@ public:
 
 		exitTexture.loadFromImage(exitImage);
 		exitSprite.setTexture(exitTexture);
-		exitSprite.setScale(0.2, 0.2);
+		exitSprite.setScale(0.2 / zoom_k, 0.2 / zoom_k);
 		exitSprite.setOrigin(170, 0);
 
 		if (endGameExist) {
@@ -403,7 +408,7 @@ public:
 		controlsImage.loadFromFile("images/WASD.png");
 		controlsTexture.loadFromImage(controlsImage);
 		controlsSprite.setTexture(controlsTexture);
-		controlsSprite.setScale(0.5, 0.5);
+		controlsSprite.setScale(0.5 / zoom_k, 0.5 / zoom_k);
 
 		bool showEButton = false;
 		bool showControls = false;
@@ -423,26 +428,26 @@ public:
 				switch (player.weapon.name) {
 				case Shotgun:
 					ammoSprite.setTextureRect(sf::IntRect(1139, 507, 211, 425));
-					ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 270);
-					ammoSprite.setScale(0.15, 0.15);
+					ammoSprite.setPosition(view.getCenter().x + 600 / zoom_k, view.getCenter().y + 270 / zoom_k);
+					ammoSprite.setScale(0.15 / zoom_k, 0.15 / zoom_k);
 					break;
 				case Pistol:
 					ammoSprite.setTextureRect(sf::IntRect(36, 686, 101, 246));
-					ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 260);
-					ammoSprite.setScale(0.3, 0.3);
+					ammoSprite.setPosition(view.getCenter().x + 600 / zoom_k, view.getCenter().y + 260 / zoom_k);
+					ammoSprite.setScale(0.3 / zoom_k, 0.3 / zoom_k);
 					break;
 				case Rifle:
 					ammoSprite.setTextureRect(sf::IntRect(448, 224, 121, 707));
-					ammoSprite.setPosition(view.getCenter().x + 600, view.getCenter().y + 225);
-					ammoSprite.setScale(0.15, 0.15);
+					ammoSprite.setPosition(view.getCenter().x + 600 / zoom_k, view.getCenter().y + 225 / zoom_k);
+					ammoSprite.setScale(0.15 / zoom_k, 0.15 / zoom_k);
 					break;
 				}
 			}
 
-			ammoText.setPosition(view.getCenter().x + 510, view.getCenter().y + 260);
+			ammoText.setPosition(view.getCenter().x + 510 / zoom_k, view.getCenter().y + 260 / zoom_k);
 
-			healthSprite.setPosition(view.getCenter().x - 650, view.getCenter().y - 330);
-			healthRect.setPosition(view.getCenter().x - 645 + 849 * scale_k, view.getCenter().y - 325);
+			healthSprite.setPosition(view.getCenter().x - 650 / zoom_k, view.getCenter().y - 330 / zoom_k);
+			healthRect.setPosition(view.getCenter().x - 645 + 849 * scale_k / zoom_k, view.getCenter().y - 325 / zoom_k);
 			healthRect.setSize(sf::Vector2f(((849 * scale_k) / 100) * (100 - player.health), 65 * scale_k));
 
 			Event event;
@@ -486,8 +491,8 @@ public:
 							if (player.weapon.ammoCount > 0) {
 								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x, aim.y, -1));
 								if (player.weapon.name == Shotgun) {
-									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x - 15, aim.y - 15, -1));
-									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x + 15, aim.y + 15, -1));
+									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x - 10, aim.y - 10, -1));
+									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, player.x, player.y, 16, 16, aim.x + 10, aim.y + 10, -1));
 								}
 								player.shoot();
 								shootSound.setVolume(100);
@@ -512,12 +517,11 @@ public:
 							Weapon weapon = *it_w;
 							if (!weapon.active) {
 								if (weapon.getRect().intersects(player.getRect())) {
+									player.weapon.setPosition(weapon.getPosition().x, weapon.getPosition().y);
+									player.weapon.active = false;
+									weapons.push_back(player.weapon);
 									weapon.active = true;
-									Weapon player_weapon = player.weapon;
-									player_weapon.setPosition(weapon.getPosition().x, weapon.getPosition().y);
-									player_weapon.active = false;
 									player.takeWeapon(weapon);
-									weapons.push_back(player_weapon);
 									weapons.erase(it_w);
 									stepSound.stop();
 									raiseItemSound.play();
@@ -560,7 +564,7 @@ public:
 			for (it = enemies.begin(), i = 0; it != enemies.end(); it++, i++) {
 				Enemy* enemy = (Enemy*)(*it);
 				if (enemy->life) {
-					if (bullets.size() > 0)
+					if (bullets.size() > 0) {
 						for (it2 = bullets.begin(); it2 != bullets.end(); it2++) {
 							Bullet* bullet = (Bullet*)(*it2);
 							// Убийство ВРАГА
@@ -599,7 +603,7 @@ public:
 								}
 							}
 						}
-
+					}
 					if (player.attack && enemy->life && !player.got) {
 						if (player.getAttackRect().intersects(enemy->getRect())) {
 							player.got = true;
@@ -622,7 +626,6 @@ public:
 						if (enemy->getAttackRect().intersects(player.getRect())) {
 							enemy->got = true;
 							player.health -= enemy->weapon.damage;
-							cout << "melee: " << player.health << endl;
 							stepSound.stop();
 							enemyStepSound.stop();
 							meleeMissSound.stop();
@@ -705,8 +708,8 @@ public:
 							if (!enemy->isShoot && enemy->timeFromSeeYa >= 2000) {
 								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
 								if (enemy->weapon.name == Shotgun) {
-									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x - 15, player.y - 15, i));
-									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x + 15, player.y + 15, i));
+									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x - 10, player.y - 10, i));
+									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x + 10, player.y + 10, i));
 								}
 								float dest = getDistance(player.x, player.y, enemy->x, enemy->y);
 								if (dest >= 1000) {
@@ -868,14 +871,18 @@ public:
 
 			window.setView(view);
 			window.clear(Color(130, 137, 150));
+
 			window.draw(layer0);
 			window.draw(layer1);
 			window.draw(layer2);
+			window.draw(layer3);
 
 			// Рисуем оружие, лежащее на земле
 			for (it_w = weapons.begin(); it_w != weapons.end(); it_w++) {
 				it_w->update(time);
-				window.draw(it_w->sprite);
+				if (!(it_w->active)) {
+					window.draw(it_w->sprite);
+				}
 			}
 
 			for (it_ab = ammoBoxes.begin(); it_ab != ammoBoxes.end(); it_ab++) {
@@ -929,8 +936,8 @@ public:
 			window.draw(healthRect);
 
 			if (showEButton) {
-				eButtonSprite.setPosition(view.getCenter().x - 600, view.getCenter().y + 200);
-				eButtonSprite.setScale(0.7, 0.7);
+				eButtonSprite.setPosition(view.getCenter().x - 600 / zoom_k, view.getCenter().y + 200 / zoom_k);
+				eButtonSprite.setScale(0.7 / zoom_k, 0.7 / zoom_k);
 				window.draw(eButtonSprite);
 			}
 
@@ -946,27 +953,24 @@ public:
 				for (int i = 0; i < 3; i++) {
 					if ((i == 0 && !showEndGame) || (i == 0 && !next))
 						continue;
-					escapeMenuTexts[i].setPosition(view.getCenter().x, view.getCenter().y - 70 + i * 60);
+					escapeMenuTexts[i].setPosition(view.getCenter().x, view.getCenter().y - 70 / zoom_k + i * 60 / zoom_k);
 					window.draw(escapeMenuTexts[i]);
 				}
 			}
 			
 			if (showControls) {
-				controlsSprite.setPosition(view.getCenter().x + 350, view.getCenter().y - 200);
+				controlsSprite.setPosition(view.getCenter().x + 350 / zoom_k, view.getCenter().y - 200 / zoom_k);
 				window.draw(controlsSprite);
 			}
 
 			if (showEndGame) {
-				endGameText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
+				endGameText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250 / zoom_k);
 				player.canMove = false;
 				window.draw(endGameText);
 			}else if (!player.life) {
-				youDiedText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250);
+				youDiedText.setPosition(escapeRect.getPosition().x, escapeRect.getPosition().y - 250 / zoom_k);
 				window.draw(youDiedText);
 			}
-
-
-
 			window.draw(aim.sprite);
 
 			window.display();
@@ -983,6 +987,7 @@ public:
 
 	int Run(sf::RenderWindow& window, int &map_i) {
 		backgroundMusic.play();
+
 		int res;
 		bool next = true;
 		for (int i = map_i; i < 2;) {

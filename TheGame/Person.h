@@ -32,15 +32,16 @@ public:
 		legsTexture.loadFromImage(LegsImage);
 		legsSprite.setTexture(legsTexture);
 		legsSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
-		legsSprite.setScale(2, 2);
+		//legsSprite.setScale(2, 2);
 		legsSprite.setOrigin(16, 16);
 		health = 100;
 		got = false;
 	}
 
 	void takeWeapon(Weapon Weapon) {
-		weapon.active = true;
+		weapon.active = false;
 		weapon = Weapon;
+		weapon.active = true;
 		if (weapon.type == Melee) {
 			sf::Image image;
 			image.loadFromFile(getPlayerSpriteFile(weapon.name));

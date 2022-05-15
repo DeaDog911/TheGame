@@ -11,7 +11,7 @@ public:
 		animationUp = false;
 		sprite.setTexture(texture);
 		sprite.setTextureRect(sf::IntRect(203, 322, 830, 685));
-		sprite.setScale(0.03, 0.03);
+		sprite.setScale(0.03 / 2, 0.03 / 2);
 		width = 830 * 0.03;
 		height = 685 * 0.03;
 		healthCount = 50;

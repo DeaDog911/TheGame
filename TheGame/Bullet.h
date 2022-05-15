@@ -27,6 +27,7 @@ public:
 		vy = (targetY - y) / distance;
 		rotate(targetX, targetY);
 		damage = 50;
+		sprite.setScale(0.5, 0.5);
 	}
 
 	void update(float time)

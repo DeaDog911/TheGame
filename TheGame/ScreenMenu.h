@@ -139,6 +139,7 @@ public:
 	int Run(sf::RenderWindow& window, int &map_i) {
 		window.setView(window.getDefaultView());
 		bool showMenu = true;
+		//view.zoom(1.5);
 		backgroundSprite.setScale(2,2);
 		backgroundSprite.setPosition(0, 0);
 		aimImage.loadFromFile("images/menu/gun_sight_12.png");

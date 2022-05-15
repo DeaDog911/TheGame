@@ -16,9 +16,9 @@ public:
 		state = stay;
 		sprite.setTextureRect(sf::IntRect(90, 8, width, height));
 		obj = lev.GetAllObjects();
-		sprite.setScale(2, 2);
-		height *= 2;
-		width = height;
+		//sprite.setScale(2, 2);
+		//height *= 2;
+		//width = height;
 		canMove = true;
 		killedImage.loadFromFile("images/killed_player.png");
 	}

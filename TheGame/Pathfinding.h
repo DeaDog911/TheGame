@@ -4,8 +4,8 @@
 #include <vector>
 
 vector<pair<int, int> > get_path(int originX, int originY, int targetX, int targetY, int** map) {
-	for (int i = 0; i < 50; i++) {
-		for (int j = 0; j < 50; j++) {
+	for (int i = 0; i < MAP_H; i++) {
+		for (int j = 0; j < MAP_W; j++) {
 			if (map[i][j] != MAXINT) {
 				map[i][j] = -1;
 			}
@@ -94,8 +94,8 @@ vector<pair<int, int> > get_path(int originX, int originY, int targetX, int targ
 
 void display(int** grid) {
 
-	for (int i = 0; i < 50; i++) {
-		for (int j = 0; j < 50; j++) {
+	for (int i = 0; i < MAP_H; i++) {
+		for (int j = 0; j < MAP_W; j++) {
 			if (grid[i][j] == MAXINT) {
 				cout << "*";
 			}

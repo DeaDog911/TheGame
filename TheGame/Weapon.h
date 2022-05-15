@@ -55,7 +55,7 @@ class Weapon : public Item {
 private:
 	void setDamageAndAmmo() {
 		switch (name) {
-		case Shotgun: damage = 30; ammoCount = 12; maxAmmoCount = 12; break;
+		case Shotgun: damage = 35; ammoCount = 12; maxAmmoCount = 12; break;
 		case Rifle: damage = 30; ammoCount = 20; maxAmmoCount = 20; break;
 		case Pistol: damage = 25; ammoCount = 30; maxAmmoCount = 30; break;
 		case Pipe: damage = 25; ammoCount = 0; maxAmmoCount = 0; break;
@@ -78,9 +78,9 @@ public:
 		sprite.setTextureRect(getWeaponTextureRect(name));
 		width = sprite.getTextureRect().width;
 		height = sprite.getTextureRect().height;
-		sprite.setScale(2, 2);
-		width *= 2;
-		height *= 2;
+		//sprite.setScale(2, 2);
+		//width *= 2;
+		//height *= 2;
 
 		setDamageAndAmmo();
 	}

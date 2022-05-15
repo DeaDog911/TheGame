@@ -40,6 +40,8 @@ public:
 		return false;
 	}
 
+
+
 	const auto& GetObject(string name) {
 		const auto& layers = map.getLayers();
 		for (const auto& layer : layers)

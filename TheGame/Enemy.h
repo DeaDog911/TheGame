@@ -39,10 +39,10 @@ public:
 		}
 		if (name == "Enemy") {
 			sprite.setTextureRect(sf::IntRect(90, 8, width, height));
-			sprite.setScale(2, 2);
+			//sprite.setScale(2, 2);
 		}
-		height *= 1.5;
-		width = height;
+		//height *= 1.5;
+		//width = height;
 		timeFromSeeYa = 0;
 
 		killedImage.loadFromFile("images/killed_enemy.png");
