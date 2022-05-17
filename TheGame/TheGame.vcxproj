@@ -159,6 +159,7 @@
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="Person.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Saves.h" />
     <ClInclude Include="ScreenGame.h" />
     <ClInclude Include="ScreenMenu.h" />
     <ClInclude Include="Screens.h" />

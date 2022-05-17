@@ -39,7 +39,7 @@ public:
 	}
 
 	void takeWeapon(Weapon Weapon) {
-		weapon.active = false;
+
 		weapon = Weapon;
 		weapon.active = true;
 		if (weapon.type == Melee) {

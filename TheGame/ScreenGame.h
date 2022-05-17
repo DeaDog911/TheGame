@@ -89,6 +89,10 @@ public:
 	}
 
 	int startGame(RenderWindow& window, string map_file, bool next) {
+		if (map_file == "level_1_1.tmx" || map_file == "level_2_1.tmx" ) {
+			MAP_H = 75;
+			MAP_W = 75;
+		}
 		int** grid = new int* [MAP_H];
 		for (int i = 0; i < MAP_H; i++) {
 			grid[i] = new int[MAP_W];
@@ -156,7 +160,7 @@ public:
 		sf::RectangleShape healthRect;
 		healthRect.setFillColor(Color(64, 64, 64));
 		healthRect.setSize(sf::Vector2f(847 * scale_k , 65 * scale_k));
-		healthRect.setScale(-1 / zoom_k, 1 / zoom_k);
+		healthRect.setScale(-1, 1);
 
 		sf::Sound shootSound;
 		sf::SoundBuffer shootBuffer, stepBuffer;
@@ -446,10 +450,6 @@ public:
 
 			ammoText.setPosition(view.getCenter().x + 510 / zoom_k, view.getCenter().y + 260 / zoom_k);
 
-			healthSprite.setPosition(view.getCenter().x - 650 / zoom_k, view.getCenter().y - 330 / zoom_k);
-			healthRect.setPosition(view.getCenter().x - 645 + 849 * scale_k / zoom_k, view.getCenter().y - 325 / zoom_k);
-			healthRect.setSize(sf::Vector2f(((849 * scale_k) / 100) * (100 - player.health), 65 * scale_k));
-
 			Event event;
 
 			while (window.pollEvent(event)) {
@@ -519,10 +519,11 @@ public:
 								if (weapon.getRect().intersects(player.getRect())) {
 									player.weapon.setPosition(weapon.getPosition().x, weapon.getPosition().y);
 									player.weapon.active = false;
+									weapons.erase(it_w);
 									weapons.push_back(player.weapon);
 									weapon.active = true;
 									player.takeWeapon(weapon);
-									weapons.erase(it_w);
+									
 									stepSound.stop();
 									raiseItemSound.play();
 									break;
@@ -568,7 +569,7 @@ public:
 						for (it2 = bullets.begin(); it2 != bullets.end(); it2++) {
 							Bullet* bullet = (Bullet*)(*it2);
 							// ׃בטיסעגמ ֲ׀ְְֳ
-							if (enemy->getRect().intersects(bullet->getRect()) && bullet->life) {
+							if (enemy->getRect().intersects(bullet->getRect()) && bullet->life && enemy->life) {
 								if (enemy->num != bullet->num) {
 									shootSound.pause();
 									bulletHitSound.play();
@@ -585,7 +586,7 @@ public:
 								}
 							}
 							// ׃בטיסעגמ ֳָ׀־Êְ
-							if (player.getRect().intersects(bullet->getRect()) && bullet->life) {
+							if (player.getRect().intersects(bullet->getRect()) && bullet->life && player.life) {
 								if (bullet->num != -1) {
 									shootSound.pause();
 									bulletHitSound.play();
@@ -647,7 +648,7 @@ public:
 
 					// ַנוםטו גנאדא
 					rect.left = enemy->x; rect.top = enemy->y;
-					rect.width = 500;
+					rect.width = 200;
 					rect.height = 2;
 					sh.setFillColor(Color(255, 255, 255));
 					sh.setSize(sf::Vector2f(rect.width, rect.height));
@@ -849,6 +850,10 @@ public:
 				}
 			}
 
+			healthSprite.setPosition(view.getCenter().x - 650 / zoom_k, view.getCenter().y - 330 / zoom_k);
+			healthRect.setPosition(view.getCenter().x - 645 / zoom_k + 849 * scale_k, view.getCenter().y - 325 / zoom_k);
+			healthRect.setSize(sf::Vector2f(((849 * scale_k) / 100) * (100 - player.health), 65 * scale_k));
+
 			updateList(it, bullets, time);
 
 			player.rotate(aim.x, aim.y);
@@ -1000,6 +1005,7 @@ public:
 			}
 			if (res == 10) {
 				i++;
+				saveLevel(i);
 				if (i == 1) next = false;
 			}
 			else {

@@ -25,7 +25,7 @@
 #include "AmmoBox.h"
 #include "HealthKit.h"
 #include "Menu.h"
-
+#include "Saves.h"
 #include "Screens.h"
 
 
@@ -41,8 +41,9 @@ int main() {
 	int screen = 0;
 
 	vector<string> maps = {
-		"level_1_1.tmx",
-		"map.tmx",
+		//"level_1_1.tmx",
+		"level_2_1.tmx",
+		//"map.tmx",
 		"map_empty.tmx",
 	};
 
@@ -51,7 +52,6 @@ int main() {
 	Screens.push_back(&screenMenu);
 	ScreenGame screenGame(maps);
 	Screens.push_back(&screenGame);
-
 
 	while(screen >= 0) {
 		screen = Screens[screen]->Run(window, map_i);

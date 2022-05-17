@@ -10,7 +10,7 @@ private:
 	float playerSpeed = personSpeed;
 	enum { left, right, up, down, stay, right_up, right_down, left_up, left_down } state;
 public:
-	float soundCircleRadius = 300.f;
+	float soundCircleRadius = 150.f;
 	bool canMove;
 	Player(Image& playerImage, Image& LegsImage, string Name, Level& lev, float X, float Y, float W, float H) : Person(playerImage, LegsImage, Name, lev, X, Y, W, H) {
 		state = stay;

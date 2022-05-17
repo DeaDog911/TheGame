@@ -18,7 +18,7 @@ public:
 		life = true;
 		obj = lvl.GetObjects("solid");
 		sprite.setTextureRect(sf::IntRect(0, 0, width, height));
-		bullet_speed = 2.5;
+		bullet_speed = 2.0;
 		targetX = tX;
 		targetY = tY;
 		fromX = X, fromY = Y;

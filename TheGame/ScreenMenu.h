@@ -132,14 +132,14 @@ public:
 		}
 		background_i = 0;
 
-		backgroundMusic.openFromFile("audioaBio-Unit-Ambient-Warning.wav");
+		backgroundMusic.openFromFile("audio/Bio-Unit-Ambient-Warning.wav");
 		backgroundMusic.setLoop(true);
 		this->maps = maps;
 	}
 	int Run(sf::RenderWindow& window, int &map_i) {
+		view.zoom(1);
 		window.setView(window.getDefaultView());
 		bool showMenu = true;
-		//view.zoom(1.5);
 		backgroundSprite.setScale(2,2);
 		backgroundSprite.setPosition(0, 0);
 		aimImage.loadFromFile("images/menu/gun_sight_12.png");
@@ -243,6 +243,16 @@ public:
 								aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
 								showMenu = false;
 								backgroundMusic.stop();
+
+								// Загрузка сохранения
+								int lvl = getSaveLevel();
+								if (lvl != -1) {
+									map_i = lvl;
+								}
+								else {
+									saveLevel(0);
+								}
+
 								return 1;
 							}
 							else if (menuTexts[1].getGlobalBounds().contains(pos.x, pos.y)) {
