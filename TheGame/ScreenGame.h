@@ -49,6 +49,7 @@ private:
 	}
 	
 	sf::Text escapeMenuTexts[3];
+	sf::Text levelNum;
 	sf::RectangleShape escapeRect;
 	sf::RectangleShape escapeBackgroundRect;
 
@@ -88,7 +89,7 @@ public:
 		this->maps = maps;
 	}
 
-	int startGame(RenderWindow& window, string map_file, bool next) {
+	int startGame(RenderWindow& window, string map_file, bool next, int map_i) {
 		if (map_file == "level_1_1.tmx" || map_file == "level_2_1.tmx" ) {
 			MAP_H = 75;
 			MAP_W = 75;
@@ -401,6 +402,15 @@ public:
 				break;
 			}
 		}
+
+		levelNum.setFont(ammoFont);
+		levelNum.setFillColor(sf::Color(255, 255, 255));
+		levelNum.setOutlineColor(sf::Color(0, 0, 0));
+		levelNum.setOutlineThickness(2 / zoom_k);
+		levelNum.setCharacterSize(50 / zoom_k);
+		string str = "Level: " + to_string(map_i + 1);
+		levelNum.setString(str);
+		levelNum.setOrigin(levelNum.getGlobalBounds().width / 2, levelNum.getGlobalBounds().height / 2);
 
 		sf::Image eButtonImage, controlsImage;
 		sf::Texture eButtonTexture, controlsTexture;
@@ -961,6 +971,9 @@ public:
 					escapeMenuTexts[i].setPosition(view.getCenter().x, view.getCenter().y - 70 / zoom_k + i * 60 / zoom_k);
 					window.draw(escapeMenuTexts[i]);
 				}
+
+				levelNum.setPosition(view.getCenter().x - 250, view.getCenter().y - 150);
+				window.draw(levelNum);
 			}
 			
 			if (showControls) {
@@ -999,9 +1012,9 @@ public:
 			if (i == 1) next = false;
 			else next = true;
 
-			res = startGame(window, maps[i], next);
+			res = startGame(window, maps[i], next, map_i);
 			while (res == -10) {
-				res = startGame(window, maps[i], next);
+				res = startGame(window, maps[i], next, map_i);
 			}
 			if (res == 10) {
 				i++;

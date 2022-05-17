@@ -272,6 +272,7 @@ public:
 									showSelectLevel = false;
 									backgroundMusic.stop();
 									map_i = i;
+									saveLevel(i);
 									return 1;
 								}
 							}

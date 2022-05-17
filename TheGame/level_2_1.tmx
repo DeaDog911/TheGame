@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="75" height="75" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="132">
+<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="75" height="75" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="135">
  <tileset firstgid="1" source="resources/bacground0.tsx"/>
  <tileset firstgid="1345" source="resources/Ambush.tsx"/>
  <tileset firstgid="2500" source="resources/NoMercy_Outro.tsx"/>
@@ -36,9 +36,7 @@
  <tileset firstgid="4647" name="sprMCGlassTable_strip4" tilewidth="24" tileheight="48" tilecount="4" columns="4">
   <image source="resources/assets/Furniture/sprMCGlassTable_strip4.png" width="96" height="48"/>
  </tileset>
- <tileset firstgid="4651" name="sprMCTVTable_strip4" tilewidth="23" tileheight="50" tilecount="4" columns="4">
-  <image source="resources/assets/Furniture/sprMCTVTable_strip4.png" width="92" height="50"/>
- </tileset>
+ <tileset firstgid="4651" source="resources/sprMCTVTable_strip4.tsx"/>
  <tileset firstgid="4655" name="WriterHome" tilewidth="16" tileheight="16" tilecount="1152" columns="32">
   <image source="resources/assets2/WriterHome.png" width="522" height="588"/>
  </tileset>
@@ -67,9 +65,7 @@
  <tileset firstgid="5857" name="sprAndersCouch" tilewidth="16" tileheight="16" tilecount="16" columns="4">
   <image source="resources/assets/Furniture/sprAndersCouch.png" width="64" height="64"/>
  </tileset>
- <tileset firstgid="5873" name="sprPizza_strip5" tilewidth="50" tileheight="40" tilecount="5" columns="5">
-  <image source="resources/assets/Furniture/sprPizza_strip5.png" width="250" height="40"/>
- </tileset>
+ <tileset firstgid="5873" source="resources/sprPizza_strip5.tsx"/>
  <tileset firstgid="5878" name="sprPoolTable" tilewidth="68" tileheight="32" tilecount="1" columns="1">
   <image source="resources/assets/Furniture/sprPoolTable.png" width="68" height="32"/>
  </tileset>
@@ -113,17 +109,17 @@
   <object id="20" name="solid" x="96.5635" y="92.93" width="46.373" height="106.64"/>
   <object id="21" name="solid" x="450.147" y="932.68" width="104.373" height="58.64"/>
   <object id="22" name="solid" x="1007.81" y="587.18" width="104.373" height="52.14"/>
-  <object id="23" name="solid" x="112.313" y="401.43" width="478.873" height="6.14"/>
-  <object id="24" name="solid" x="584.564" y="401.097" width="6.20633" height="461.64"/>
+  <object id="23" name="solid" x="112.313" y="401.43" width="174.373" height="6.14"/>
+  <object id="24" name="solid" x="584.564" y="401.097" width="6.20633" height="205.64"/>
   <object id="25" name="solid" x="392.23" y="856.513" width="199.54" height="7.30667"/>
   <object id="26" name="solid" x="495.897" y="824.68" width="56.2067" height="21.64"/>
   <object id="27" name="solid" x="561.897" y="737.18" width="22.2067" height="62.3067"/>
   <object id="28" name="solid" x="400.897" y="751.847" width="20.2067" height="47.9734"/>
-  <object id="29" name="solid" x="385.063" y="688.347" width="5.79003" height="431.307"/>
+  <object id="29" name="solid" x="385.063" y="688.847" width="6.54003" height="430.807"/>
   <object id="30" name="solid" x="112.855" y="1112.85" width="278.04" height="6.807"/>
   <object id="31" name="solid" x="112.98" y="577.347" width="6.54" height="542.807"/>
   <object id="32" name="solid" x="112.73" y="576.763" width="272.373" height="6.14033"/>
-  <object id="33" name="solid" x="385.23" y="481.68" width="6.20633" height="158.807"/>
+  <object id="33" name="solid" x="385.23" y="481.68" width="6.20633" height="157.557"/>
   <object id="34" name="solid" x="385.564" y="407.18" width="6.20633" height="24.9737"/>
   <object id="35" name="solid" x="159.855" y="975.597" width="39.04" height="64.557"/>
   <object id="36" name="solid" x="224.73" y="976.471" width="23.04" height="45.307"/>
@@ -317,7 +313,7 @@
    </properties>
    <point/>
   </object>
-  <object id="124" name="2" type="track" x="496" y="752">
+  <object id="124" name="2" type="track" x="457.333" y="674">
    <properties>
     <property name="enemyNum" value="6"/>
    </properties>
@@ -364,6 +360,8 @@
    </properties>
    <point/>
   </object>
+  <object id="132" name="solid" x="338.313" y="400.93" width="252.873" height="6.14"/>
+  <object id="133" name="solid" x="584.897" y="656.68" width="6.20633" height="206.64"/>
  </objectgroup>
  <layer id="2" name="floor" width="75" height="75">
   <data>

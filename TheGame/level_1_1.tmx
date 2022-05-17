@@ -289,7 +289,7 @@
   <object id="95" name="healthKit" x="703.667" y="593.833" width="18.6667" height="16.6667"/>
   <object id="97" name="healthKit" x="847.667" y="1085.67" width="18.6667" height="16.6667"/>
   <object id="98" name="ammoBox" x="515.667" y="1053.67" width="18.6667" height="16.6667"/>
-  <object id="99" name="ammoBox" x="264.667" y="798.667" width="18.6667" height="16.6667"/>
+  <object id="99" name="ammoBox" x="288.667" y="814.667" width="18.6667" height="16.6667"/>
   <object id="100" name="ammoBox" x="519.667" y="510.667" width="18.6667" height="16.6667"/>
   <object id="101" name="ammoBox" x="954.667" y="847.667" width="18.6667" height="16.6667"/>
   <object id="102" name="ammoBox" x="818.667" y="771.667" width="18.6667" height="16.6667"/>
