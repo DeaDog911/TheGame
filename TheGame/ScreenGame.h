@@ -109,6 +109,8 @@ public:
 		
 		view.zoom(1 / zoom_k);
 
+		//view.zoom(1.5);
+
 		Level lvl(map_file);
 
 		MapLayer layer0(lvl.map, 0);
@@ -228,11 +230,14 @@ public:
 		bulletHitSoundBuffer.loadFromFile("audio/bullet_hit.wav");
 		bulletHitSound.setBuffer(bulletHitSoundBuffer);
 
-		Image playerImage, legsImage;
+		Image playerImage, playerLegsImage, enemyLegsImage;
+
 		playerImage.loadFromFile("images/player_shotgun.png");
-		legsImage.loadFromFile("images/legs.png");
+		enemyLegsImage.loadFromFile("images/legs.png");
+		playerLegsImage.loadFromFile("images/legs_player.png");
+
 		Object playerObj = lvl.GetObject("player");
-		Player player(playerImage, legsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
+		Player player(playerImage, playerLegsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
 
 		sf::Image weaponsImage;
 		sf::Texture weaponsTexture;
@@ -258,7 +263,7 @@ public:
 
 		vector <Object> enemiesObj = lvl.GetObjectsWithType("enemy");
 		for (int i = 0; i < enemiesObj.size(); i++) {
-			Enemy* enemy = new Enemy(playerImage, legsImage, "Enemy", enemiesObj[i].getName(), lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
+			Enemy* enemy = new Enemy(playerImage, enemyLegsImage, "Enemy", enemiesObj[i].getName(), lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
 			string weaponString = enemiesObj[i].getProperties()[0].getStringValue();
 			Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
 			enemy->takeWeapon(wp);
@@ -652,9 +657,12 @@ public:
 						}
 					}
 
+					// Коллизия игрока с врагами
+					/*
 					if (enemy->getRect().intersects(player.getRect()) && player.life) {
 						player.stopInFront(enemy->getRect(), player.speedX, player.speedY);
 					}
+					*/
 
 					// Зрение врага
 					rect.left = enemy->x; rect.top = enemy->y;
