@@ -32,7 +32,6 @@ public:
 		legsTexture.loadFromImage(LegsImage);
 		legsSprite.setTexture(legsTexture);
 		legsSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
-		//legsSprite.setScale(2, 2);
 		legsSprite.setOrigin(16, 16);
 		health = 100;
 		got = false;
@@ -91,32 +90,14 @@ public:
 		legsTime = 0;
 	}
 
-	bool virtual checkCollisionWithMap(float dx, float dy) = 0;
-
-	void move(float tempX, float tempY, float time) {
-		if (isMove) {
-			float distance = sqrt((tempX - x) * (tempX - x) + (tempY - y) * (tempY - y));
-			float tempSpeedX, tempSpeedY;
-			if (distance > 2) {
-				tempSpeedX = 0.1 * (tempX - x) / distance;
-				tempSpeedY = 0.1 * (tempY - y) / distance;
-				x += tempSpeedX * time;
-				checkCollisionWithMap(tempSpeedX, 0);
-				y += tempSpeedY * time;
-				checkCollisionWithMap(0, tempSpeedY);
-			}
-			else { isMove = false; }
-		}
-	}
-
 	void setDeadSprite(float angle) {
 		texture.loadFromImage(killedImage);
 		isMove = false;
 		sprite.setTexture(texture);
+		sprite.setOrigin(38, 16);
 		sprite.setPosition(x, y);
 		width = 60 * 2;
 		height = 32 * 2;
-		sprite.setOrigin(width / 2, height / 2);
 		sprite.setRotation(angle);
 		sprite.setTextureRect(sf::IntRect(0, 0, 60, 32));
 		for (int i = 0; i < obj.size(); i++) {
@@ -133,7 +114,7 @@ public:
 
 	void updateSprite() {
 		float shootDt = dt + 5;
-		float hitDt = dt;
+		float hitDt = 60;
 		if (isShoot) {
 			if (weapon.name == Shotgun) {
 				int i = int(shootTime / shootDt);
@@ -208,9 +189,9 @@ public:
 	}
 
 	sf::FloatRect getAttackRect() {
-		sf::RectangleShape rectSh(sf::Vector2f(40, 60));
-		rectSh.setPosition(sf::Vector2f(x, y));
-		rectSh.setOrigin(0, 30);
+		sf::RectangleShape rectSh(sf::Vector2f(25, 30));
+		rectSh.setPosition(sf::Vector2f(x + width / 2, y + height / 2));
+		rectSh.setOrigin(0, 15);
 		rectSh.setRotation(sprite.getRotation());
 		return rectSh.getGlobalBounds();
 	}
@@ -245,4 +226,5 @@ public:
 	*/
 
 	virtual std::string getPlayerSpriteFile(WeaponName name) = 0;
+	bool virtual checkCollisionWithMap(float dx, float dy) = 0;
 };

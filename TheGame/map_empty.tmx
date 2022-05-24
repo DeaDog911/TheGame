@@ -5026,7 +5026,7 @@
   </object>
   <object id="58" name="player" x="155" y="330" width="32" height="32">
    <properties>
-    <property name="weaponName" value="shotgun"/>
+    <property name="weaponName" value="pipe"/>
    </properties>
   </object>
  </objectgroup>

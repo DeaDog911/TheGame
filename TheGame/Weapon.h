@@ -14,6 +14,14 @@ WeaponName getEnumIndex(string name) {
 	if (name == "pipe") return Pipe;
 }
 
+string getWeaponNameStr(WeaponName name) {
+	if (name == Shotgun) return "shotgun";
+	if (name == Pistol) return "pistol";
+	if (name == Rifle) return "rifle";
+	if (name == Bat) return "bat";
+	if (name == Pipe) return "pipe";
+}
+
 WeaponType getWeaponType(string name) {
 	if (name == "shotgun" || name == "pistol" || name == "rifle") {
 		return Gun;
@@ -55,11 +63,11 @@ class Weapon : public Item {
 private:
 	void setDamageAndAmmo() {
 		switch (name) {
-		case Shotgun: damage = 35; ammoCount = 15; maxAmmoCount = 12; break;
+		case Shotgun: damage = 40; ammoCount = 15; maxAmmoCount = 12; break;
 		case Rifle: damage = 30; ammoCount = 20; maxAmmoCount = 20; break;
 		case Pistol: damage = 25; ammoCount = 30; maxAmmoCount = 30; break;
-		case Pipe: damage = 25; ammoCount = 0; maxAmmoCount = 0; break;
-		case Bat: damage = 20; ammoCount = 0; maxAmmoCount = 0; break;
+		case Pipe: damage = 35; ammoCount = 0; maxAmmoCount = 0; break;
+		case Bat: damage = 35; ammoCount = 0; maxAmmoCount = 0; break;
 		}
 	}
 public:

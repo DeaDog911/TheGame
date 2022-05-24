@@ -18,22 +18,36 @@ int getLevelFromSave(string str) {
     return atoi(lvl_str.c_str());
 }
 
-void saveLevel(int lvl) {
+void saveLevel(int lvl, string weapon) {
     ofstream out(saves_path, ios::out);
     if (out.is_open()) {
         string save_str = "level: " + to_string(lvl);
-        out.write(save_str.c_str(), sizeof(save_str.c_str()) + 1);
+        save_str.append("\n");
+        save_str.append(weapon.c_str());
+        out.write(save_str.c_str(), save_str.size());
         out.close();
     }
 }
 
 int getSaveLevel() {
     ifstream in(saves_path, ios::in);
+    string line;
     if (in.is_open()) {
-        char buff[20];
-        in.read(buff, sizeof(buff));
+        getline(in, line);
         in.close();
-        return getLevelFromSave(buff);
+        return getLevelFromSave(line);
     }
     return -1;
+}
+
+string getSaveWeapon() {
+    ifstream in(saves_path, ios::in);
+    string line;
+    if (in.is_open()) {
+        getline(in, line);
+        getline(in, line);
+        in.close();
+        return line;
+    }
+    return "default";
 }

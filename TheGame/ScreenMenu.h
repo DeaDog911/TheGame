@@ -120,6 +120,7 @@ private:
 	int background_i;
 	sf::Music backgroundMusic;
 	vector <string> maps;
+	int levelCount;
 public:
 	ScreenMenu(vector<string> maps) {
 		backgroundImage.loadFromFile("images/menu/menu_background2.jpg");
@@ -137,7 +138,9 @@ public:
 		this->maps = maps;
 	}
 	int Run(sf::RenderWindow& window, int &map_i) {
-		view.zoom(1);
+		int windowX = 1380;
+		int windowY = 720;
+
 		window.setView(window.getDefaultView());
 
 		bool showMenu = true;
@@ -157,7 +160,7 @@ public:
 			sf::Text menuText;
 			menuText.setFont(font);
 			menuText.setCharacterSize(100);
-			menuText.setPosition(window.getSize().x / 2, window.getSize().y / 2 + i * 120);
+			menuText.setPosition(windowX / 2, windowY / 2 + i * 120);
 			menuText.setFillColor(sf::Color(255, 100, 20));
 			menuText.setOutlineThickness(3);
 			menuText.setOutlineColor(sf::Color(0, 0, 0));
@@ -172,24 +175,26 @@ public:
 			menuTexts[i].setOrigin(menuTexts[i].getGlobalBounds().width / 2, menuTexts[i].getGlobalBounds().height / 2);
 		}
 
-		const int levelCount = maps.size() + 1;
-		sf::Text selectLevelTexts[3];
-		for (int i = 0; i < 3; i++) {
-				sf::Text menuText;
-				menuText.setFont(font);
-				menuText.setCharacterSize(70);
-				menuText.setPosition(window.getSize().x / 2, window.getSize().y / 2 + i * 100);
-				menuText.setFillColor(sf::Color(255, 100, 20));
-				menuText.setOutlineThickness(3);
-				menuText.setOutlineColor(sf::Color(0, 0, 0));
-				selectLevelTexts[i] = menuText;
+		levelCount = maps.size() + 1;
+		sf::Text selectLevelTexts[5];
+		for (int i = 0; i < levelCount; i++) {
+			sf::Text menuText;
+			menuText.setFont(font);
+			menuText.setCharacterSize(70);
+			menuText.setPosition(windowX / 2, windowY / 2 + - 200 + i * 100);
+			menuText.setFillColor(sf::Color(255, 100, 20));
+			menuText.setOutlineThickness(3);
+			menuText.setOutlineColor(sf::Color(0, 0, 0));
+			selectLevelTexts[i] = menuText;
 		}
 
 		selectLevelTexts[0].setString("LEVEL 1");
 		selectLevelTexts[1].setString("LEVEL 2");
-		selectLevelTexts[2].setString("BACK");
+		selectLevelTexts[2].setString("LEVEL 3");
+		selectLevelTexts[3].setString("LEVEL 4");
+		selectLevelTexts[4].setString("BACK");
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < levelCount; i++) {
 			selectLevelTexts[i].setOrigin(selectLevelTexts[i].getGlobalBounds().width / 2, selectLevelTexts[i].getGlobalBounds().height / 2);
 		}
 
@@ -223,7 +228,7 @@ public:
 				}
 			}
 			else {
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < levelCount; i++) {
 					if (selectLevelTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
 						selectLevelTexts[i].setFillColor(sf::Color(255, 0, 0));
 						aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
@@ -251,7 +256,7 @@ public:
 									map_i = lvl;
 								}
 								else {
-									saveLevel(0);
+									saveLevel(0, "default");
 								}
 
 								return 1;
@@ -266,18 +271,18 @@ public:
 							}
 						}
 						else {
-							for (int i = 0; i < 2; i++) {
+							for (int i = 0; i < levelCount - 1; i++) {
 								if (selectLevelTexts[i].getGlobalBounds().contains(pos.x, pos.y)) {
 									aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
 									showMenu = false;
 									showSelectLevel = false;
 									backgroundMusic.stop();
 									map_i = i;
-									saveLevel(i);
+									saveLevel(i, "default");
 									return 1;
 								}
 							}
-							if (selectLevelTexts[2].getGlobalBounds().contains(pos.x, pos.y)) {
+							if (selectLevelTexts[levelCount - 1].getGlobalBounds().contains(pos.x, pos.y)) {
 								aimSprite.setTextureRect(sf::IntRect(335, 33, 256, 259));
 								showSelectLevel = false;
 							}
@@ -296,7 +301,7 @@ public:
 				}
 			}
 			else {
-				for (int i = 0; i < 3; i++) {
+				for (int i = 0; i < levelCount; i++) {
 					window.draw(selectLevelTexts[i]);
 				}
 			}

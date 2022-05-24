@@ -36,17 +36,21 @@ using namespace tmx;
 int main() {
 	sf::RenderWindow window(VideoMode(1380, 720), "Game");
 	window.setMouseCursorVisible(false);
-	
+
+	// Растянуть на весь экран
+	::ShowWindow(window.getSystemHandle(), SW_MAXIMIZE);
+
 	std::vector<cScreen*> Screens;
 	int screen = 0;
 
 	vector<string> maps = {
+		//"map.tmx",
+		//"map_empty.tmx",
 		"level_1_1.tmx",
 		"level_2_1.tmx",
 		"level_3_1.tmx",
 		"level_3_2.tmx",
-		//"map.tmx",
-		//"map_empty.tmx",
+		
 	};
 
 	int map_i = 0;

@@ -7,7 +7,7 @@ using namespace sf;
 
 class Player : public Person {
 private:
-	float playerSpeed = personSpeed;
+	const float playerSpeed = personSpeed;
 	enum { left, right, up, down, stay, right_up, right_down, left_up, left_down } state;
 public:
 	float soundCircleRadius = 150.f;

@@ -52,6 +52,7 @@ private:
 	sf::Text levelNum;
 	sf::RectangleShape escapeRect;
 	sf::RectangleShape escapeBackgroundRect;
+	string lastWeapon;
 
 	void initializeEescapeMenu(sf::Font &font) {
 		escapeRect.setSize(sf::Vector2f(500 / zoom_k, 300 / zoom_k));
@@ -87,9 +88,40 @@ public:
 	ScreenGame(vector<string> maps) {
 		backgroundMusic.openFromFile("audio/Bio-Unit-Level.wav");
 		this->maps = maps;
+		lastWeapon = "default"; 
+	}
+
+	int Run(sf::RenderWindow& window, int& map_i) {
+		backgroundMusic.play();
+
+		int res;
+		bool next = true;
+		const int lvlCount = 4;
+		for (int i = map_i; i < lvlCount;) {
+			if (i == lvlCount - 1) next = false;
+			else next = true;
+			res = startGame(window, maps[i], next, map_i);
+			while (res == -10) {
+				saveLevel(i, "default");
+				res = startGame(window, maps[i], next, map_i);
+			}
+			if (res == 10) {
+				i++;
+				saveLevel(i, lastWeapon);
+				if (i == lvlCount - 1) next = false;
+			}
+			else {
+				backgroundMusic.stop();
+				return res;
+			}
+		}
+		backgroundMusic.stop();
+		return res;
 	}
 
 	int startGame(RenderWindow& window, string map_file, bool next, int map_i) {
+		string weapon = getSaveWeapon();
+		cout << "weapon: " << weapon << endl;
 		if (map_file == "level_1_1.tmx" || map_file == "level_2_1.tmx" ) {
 			MAP_H = 75;
 			MAP_W = 75;
@@ -251,8 +283,17 @@ public:
 		healthKitTexture.loadFromImage(healthKitImage);
 
 		string weaponString = playerObj.getProperties()[0].getStringValue();
-		Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
-		player.takeWeapon(wp);
+		
+		string weaponStr = getSaveWeapon();
+		if (weapon == "default") {
+			Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
+			player.takeWeapon(wp);
+		}
+		else {
+			Weapon wp(weaponsTexture, getWeaponType(weaponStr), getEnumIndex(weaponStr));
+			player.takeWeapon(wp);
+		}
+		
 
 		Image bulletImage;
 		bulletImage.loadFromFile("images/bullet_tr2.png");
@@ -484,6 +525,7 @@ public:
 				if (event.type == Event::MouseButtonPressed) {
 					if (showEscape) {
 						if (escapeMenuTexts[0].getGlobalBounds().contains(pos.x, pos.y)) {
+							lastWeapon = getWeaponNameStr(player.weapon.name);
 							return 10;
 						}
 						if (escapeMenuTexts[1].getGlobalBounds().contains(pos.x, pos.y)) {
@@ -896,6 +938,20 @@ public:
 			window.draw(layer2);
 			window.draw(layer3);
 
+			// Рисуем мертвого игрока
+			if (!player.life) {
+				window.draw(player.sprite);
+			}
+
+			// Рисуем врагов
+			for (it = enemies.begin(); it != enemies.end(); it++) {
+				Enemy* enemy = (Enemy*)*it;
+				if (enemy->life)
+					window.draw(enemy->legsSprite);
+				window.draw(enemy->sprite);
+			}
+
+
 			// Рисуем оружие, лежащее на земле
 			for (it_w = weapons.begin(); it_w != weapons.end(); it_w++) {
 				it_w->update(time);
@@ -914,20 +970,6 @@ public:
 				window.draw(it_hk->sprite);
 			}
 
-			// Рисуем мертвого игрока
-			if (!player.life) {
-				window.draw(player.sprite);
-			}
-
-			// Рисуем врагов
-			for (it = enemies.begin(); it != enemies.end(); it++) {
-				Enemy* enemy = (Enemy*)*it;
-				if (enemy->life)
-					window.draw(enemy->legsSprite);
-				window.draw(enemy->sprite);
-			}
-
-
 			if (showExit) {
 				window.draw(exitSprite);
 			}
@@ -940,14 +982,6 @@ public:
 			if (player.life) {
 				window.draw(player.legsSprite);
 				window.draw(player.sprite);
-
-				/*
-				sf::RectangleShape sh(sf::Vector2f(player.width / 2, player.height / 2));
-				sh.setPosition(sf::Vector2f(player.x + player.width /2 / 2, player.y + player.height / 2 / 2));
-				sh.setRotation(player.sprite.getRotation());
-				sh.setOrigin(sh.getSize().x / 2, sh.getSize().y / 2);
-				window.draw(sh);
-				*/
 			}
 
 			// Рисуем пули
@@ -1022,32 +1056,5 @@ public:
 		delete[] grid;
 
 		return 0;
-	}
-
-	int Run(sf::RenderWindow& window, int &map_i) {
-		backgroundMusic.play();
-
-		int res;
-		bool next = true;
-		for (int i = map_i; i < 2;) {
-			if (i == 1) next = false;
-			else next = true;
-
-			res = startGame(window, maps[i], next, map_i);
-			while (res == -10) {
-				res = startGame(window, maps[i], next, map_i);
-			}
-			if (res == 10) {
-				i++;
-				saveLevel(i);
-				if (i == 1) next = false;
-			}
-			else {
-				backgroundMusic.stop();
-				return res;
-			}
-		}
-		backgroundMusic.stop();
-		return res;
 	}
 };
