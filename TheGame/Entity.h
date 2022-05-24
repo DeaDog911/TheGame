@@ -50,13 +50,5 @@ public:
 		return rect;
 	}
 
-	sf::FloatRect getLeftSide() {
-		return sf::FloatRect(x + width / 2, y, width, height / 2);
-	}
-
-	sf::FloatRect getRightSide() {
-		return sf::FloatRect(x + width / 2, y, width, height / 2);
-	}
-
 	virtual void update(float time) = 0;
 };

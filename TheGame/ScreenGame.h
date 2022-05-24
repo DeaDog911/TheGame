@@ -652,6 +652,8 @@ public:
 							}
 						}
 					}
+
+					// Игрок останавливается перед врагами
 					/*
 					if (enemy->getRect().intersects(player.getRect()) && player.life) {
 						player.stopInFront(enemy->getRect(), player.speedX, player.speedY);
@@ -941,6 +943,15 @@ public:
 			}
 
 			// Рисуем пули
+			/*
+			for (it = bullets.begin(); it != bullets.end(); it++) {
+				sf::RectangleShape sh(sf::Vector2f((*it)->getRect().width, (*it)->getRect().height));
+				sh.setPosition(sf::Vector2f((*it)->getRect().left  , (*it)->getRect().top + (*it)->getRect().height / 2));
+				sh.setRotation((*it)->sprite.getRotation());
+				window.draw(sh);
+			}
+			*/
+
 			drawList(it, bullets, window);
 
 			if (player.weapon.type == Gun) {

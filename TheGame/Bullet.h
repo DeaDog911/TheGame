@@ -28,6 +28,8 @@ public:
 		rotate(targetX, targetY);
 		damage = 50;
 		sprite.setScale(0.5, 0.5);
+		height = 4;
+		width = 16;
 	}
 
 	void update(float time)
@@ -43,5 +45,12 @@ public:
 			}
 		}
 		sprite.setPosition(x + width / 2, y + height / 2);
+	}
+
+	sf::FloatRect getRect() {
+		sf::RectangleShape sh(sf::Vector2f(width, height));
+		sh.setPosition(sf::Vector2f(x, y + height / 2));
+		sh.setRotation(sprite.getRotation());
+		return sh.getGlobalBounds();
 	}
 };

@@ -87,6 +87,9 @@
   <image source="resources/assets2/DeathWish.png" width="886" height="832"/>
  </tileset>
  <tileset firstgid="7619" source="resources/sprGlassPanelH.tsx"/>
+ <tileset firstgid="7620" name="sprPoolTable" tilewidth="68" tileheight="32" tilecount="1" columns="1">
+  <image source="resources/assets/Furniture/sprPoolTable.png" width="68" height="32"/>
+ </tileset>
  <objectgroup id="4" name="objects">
   <object id="1" name="solid" x="0.605" y="791.43" width="799.457" height="8.47367"/>
   <object id="2" name="solid" x="790.772" y="-0.903502" width="9.95633" height="799.474"/>
@@ -117,8 +120,7 @@
   <object id="28" name="solid" x="528.783" y="523.513" width="31.184" height="68.474"/>
   <object id="29" name="solid" x="592.408" y="523.013" width="31.184" height="68.474"/>
   <object id="30" name="solid" x="353.408" y="495.263" width="53.934" height="12.974"/>
-  <object id="31" name="solid" x="177.741" y="412.596" width="30.684" height="66.724"/>
-  <object id="32" name="solid" x="371.472" y="256.149" width="30.684" height="66.724" rotation="90.414"/>
+  <object id="31" name="solid" x="129.741" y="417.929" width="65.0173" height="28.3907"/>
   <object id="33" name="solid" x="119.908" y="291.138" width="13.434" height="56.474"/>
   <object id="34" name="solid" x="128.533" y="500.263" width="25.434" height="21.474"/>
   <object id="35" name="solid" x="128.783" y="532.513" width="28.934" height="25.724"/>
@@ -142,7 +144,7 @@
   <object id="53" name="solid" x="675.283" y="171.513" width="18.684" height="65.724"/>
   <object id="54" name="player" x="308" y="715" width="32" height="32">
    <properties>
-    <property name="weaponName" value="shotgun"/>
+    <property name="weaponName" value="pistol"/>
    </properties>
   </object>
   <object id="55" name="solid" x="401.075" y="727.763" width="53.184" height="25.8073"/>
@@ -233,7 +235,7 @@
    </properties>
    <point/>
   </object>
-  <object id="80" name="2" type="track" x="290.667" y="250">
+  <object id="80" name="2" type="track" x="301.334" y="245.333">
    <properties>
     <property name="enemyNum" value="4"/>
    </properties>
@@ -3615,7 +3617,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="4741"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -4104,7 +4106,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile/>
+   <tile gid="4741"/>
    <tile/>
    <tile/>
    <tile/>
@@ -4207,7 +4209,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="2684359301"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -7282,7 +7284,7 @@
    <tile gid="4705"/>
    <tile gid="4705"/>
    <tile gid="7619"/>
-   <tile gid="2684359257"/>
+   <tile/>
    <tile gid="4705"/>
    <tile gid="4705"/>
    <tile gid="4705"/>
@@ -7290,7 +7292,7 @@
    <tile gid="4705"/>
    <tile gid="4705"/>
    <tile gid="7619"/>
-   <tile gid="2684359257"/>
+   <tile/>
    <tile gid="4705"/>
    <tile gid="4705"/>
    <tile gid="1610617440"/>
