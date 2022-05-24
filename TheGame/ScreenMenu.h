@@ -139,6 +139,7 @@ public:
 	int Run(sf::RenderWindow& window, int &map_i) {
 		view.zoom(1);
 		window.setView(window.getDefaultView());
+
 		bool showMenu = true;
 		backgroundSprite.setScale(2,2);
 		backgroundSprite.setPosition(0, 0);
