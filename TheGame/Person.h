@@ -234,5 +234,15 @@ public:
 		shootTime = 0;
 	}
 
+	/*
+	sf::FloatRect getRect() {
+		sf::RectangleShape sh(sf::Vector2f(width, height));
+		sh.setPosition(sf::Vector2f(x + width / 2, y + height / 2));
+		sh.setRotation(sprite.getRotation());
+		sh.setOrigin(sh.getSize().x / 2, sh.getSize().y / 2);
+		return sh.getGlobalBounds();
+	}
+	*/
+
 	virtual std::string getPlayerSpriteFile(WeaponName name) = 0;
 };

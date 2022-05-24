@@ -940,6 +940,14 @@ public:
 			if (player.life) {
 				window.draw(player.legsSprite);
 				window.draw(player.sprite);
+
+				/*
+				sf::RectangleShape sh(sf::Vector2f(player.width / 2, player.height / 2));
+				sh.setPosition(sf::Vector2f(player.x + player.width /2 / 2, player.y + player.height / 2 / 2));
+				sh.setRotation(player.sprite.getRotation());
+				sh.setOrigin(sh.getSize().x / 2, sh.getSize().y / 2);
+				window.draw(sh);
+				*/
 			}
 
 			// Рисуем пули

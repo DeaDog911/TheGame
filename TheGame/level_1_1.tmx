@@ -100,34 +100,34 @@
   <object id="7" name="solid" x="3.12" y="23.64" width="17.76" height="1164.72"/>
   <object id="8" name="solid" x="736.953" y="417.471" width="365.805" height="5.05743"/>
   <object id="9" name="solid" x="736.976" y="423.835" width="6.47167" height="194.391"/>
-  <object id="10" name="solid" x="1096.76" y="416.592" width="6.38076" height="696.311"/>
+  <object id="10" name="solid" x="1096.76" y="423.683" width="6.38076" height="689.22"/>
   <object id="11" name="solid" x="129.111" y="1112.57" width="974.261" height="6.61214"/>
-  <object id="12" name="solid" x="128.972" y="417.117" width="6.36945" height="701.932"/>
+  <object id="12" name="solid" x="128.972" y="417.117" width="6.36945" height="695.205"/>
   <object id="13" name="solid" x="135.597" y="416.723" width="423.775" height="6.85624"/>
   <object id="14" name="solid" x="551.764" y="422.805" width="6.47167" height="194.391"/>
-  <object id="15" name="solid" x="431.764" y="616.804" width="6.47167" height="262.391"/>
-  <object id="16" name="solid" x="872.764" y="617.804" width="6.47167" height="262.391"/>
-  <object id="17" name="solid" x="561.014" y="872.804" width="176.222" height="6.391"/>
-  <object id="18" name="solid" x="801.264" y="872.554" width="77.472" height="6.641"/>
-  <object id="19" name="solid" x="433.264" y="872.304" width="61.847" height="7.391"/>
-  <object id="20" name="solid" x="431.264" y="617.054" width="192.722" height="7.391"/>
+  <object id="15" name="solid" x="432.264" y="624.054" width="6.47167" height="254.308"/>
+  <object id="16" name="solid" x="872.764" y="624.179" width="6.47167" height="256.016"/>
+  <object id="17" name="solid" x="561.014" y="872.804" width="174.472" height="6.391"/>
+  <object id="18" name="solid" x="801.264" y="872.554" width="71.097" height="6.641"/>
+  <object id="19" name="solid" x="440.139" y="872.304" width="54.972" height="7.391"/>
+  <object id="20" name="solid" x="433.014" y="617.054" width="190.972" height="7.391"/>
   <object id="21" name="solid" x="672.764" y="617.054" width="94.722" height="6.391"/>
   <object id="22" name="solid" x="831.764" y="616.054" width="47.722" height="7.391"/>
   <object id="23" name="solid" x="929.389" y="576.971" width="169.139" height="7.391"/>
-  <object id="24" name="solid" x="929.056" y="872.304" width="167.389" height="7.391"/>
+  <object id="24" name="solid" x="929.181" y="872.929" width="167.514" height="6.266"/>
   <object id="25" name="solid" x="929.18" y="583.804" width="5.30567" height="102.97"/>
-  <object id="26" name="solid" x="929.431" y="735.554" width="5.639" height="139.141"/>
+  <object id="26" name="solid" x="929.056" y="736.429" width="5.639" height="135.766"/>
   <object id="27" name="solid" x="872.59" y="961.02" width="6.54809" height="151.868"/>
-  <object id="28" name="solid" x="817.124" y="961.339" width="55.6049" height="6.23164"/>
-  <object id="29" name="solid" x="736.726" y="960.702" width="47.0254" height="6.23164"/>
+  <object id="28" name="solid" x="817.457" y="961.339" width="55.2716" height="6.23164"/>
+  <object id="29" name="solid" x="745.059" y="960.702" width="39.0254" height="6.23164"/>
   <object id="30" name="solid" x="736.726" y="966.975" width="6.91173" height="145.141"/>
   <object id="31" name="solid" x="457.044" y="1023.68" width="6.91173" height="88.641"/>
   <object id="32" name="solid" x="456.544" y="879.68" width="6.91173" height="96.641"/>
   <object id="33" name="solid" x="344.794" y="767.679" width="6.91173" height="111.641"/>
-  <object id="34" name="solid" x="344.294" y="609.179" width="6.91173" height="78.141"/>
+  <object id="34" name="solid" x="344.294" y="616.179" width="6.91173" height="71.141"/>
   <object id="35" name="solid" x="256.544" y="608.679" width="89.4117" height="6.641"/>
   <object id="36" name="solid" x="256.544" y="423.429" width="6.4117" height="184.891"/>
-  <object id="37" name="solid" x="135.264" y="872.304" width="215.972" height="6.891"/>
+  <object id="37" name="solid" x="135.264" y="872.304" width="209.639" height="6.891"/>
   <object id="39" name="solid" x="785.431" y="462.138" width="45.1383" height="35.0577"/>
   <object id="40" name="solid" x="760.431" y="516.471" width="11.6383" height="45.0577"/>
   <object id="41" name="solid" x="918.931" y="429.471" width="53.6383" height="31.0577"/>

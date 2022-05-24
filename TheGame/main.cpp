@@ -41,8 +41,8 @@ int main() {
 	int screen = 0;
 
 	vector<string> maps = {
-		//"level_1_1.tmx",
-		//"level_2_1.tmx",
+		"level_1_1.tmx",
+		"level_2_1.tmx",
 		"level_3_1.tmx",
 		"level_3_2.tmx",
 		//"map.tmx",
