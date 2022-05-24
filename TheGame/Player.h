@@ -20,7 +20,7 @@ public:
 		//height *= 2;
 		//width = height;
 		canMove = true;
-		killedImage.loadFromFile("images/killed_player2.png");
+		killedImage.loadFromFile("images/killed_player.png");
 	}
 
 	void control() {
@@ -89,16 +89,15 @@ public:
 
 	string getPlayerSpriteFile(WeaponName name) {
 		switch (name) {
-		case Shotgun: return "images/player_shotgun2.png";
-		case Pipe: return "images/player_pipe2.png";
-		case Bat: return "images/player_bat2.png";
-		case Rifle: return "images/player_rifle2.png";
-		case Pistol: return "images/player_pistol2.png";
+		case Shotgun: return "images/player_shotgun.png";
+		case Pipe: return "images/player_pipe.png";
+		case Bat: return "images/player_bat.png";
+		case Rifle: return "images/player_rifle.png";
+		case Pistol: return "images/player_pistol.png";
 		}
 	}
 
-	bool checkCollisionWithMap(float Dx, float Dy) {
-		bool collised = false;
+	void checkCollisionWithMap(float Dx, float Dy) {
 		for (int i = 0; i < obj.size(); i++) {
 			if (getRect().intersects(sf::FloatRect(obj[i].getAABB().left, obj[i].getAABB().top, obj[i].getAABB().width, obj[i].getAABB().height)))//проверяем пересечение игрока с объектом
 			{
@@ -106,10 +105,8 @@ public:
 				{
 					tmx::FloatRect tmxRect = obj[i].getAABB();
 					stopInFront(sf::FloatRect(tmxRect.left, tmxRect.top, tmxRect.width, tmxRect.height), Dx, Dy);
-					collised = true;
 				}
 			}
 		}
-		return collised;
 	}
 };

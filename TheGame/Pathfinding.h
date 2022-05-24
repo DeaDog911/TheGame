@@ -62,14 +62,12 @@ vector<pair<int, int> > get_path(int originX, int originY, int targetX, int targ
 			for (int d = 0; d < 8; d++) {
 				int nx = i->first + dx[d];
 				int ny = i->second + dy[d];
-				if (ny >= 0 && ny < MAP_H && nx >= 0 && nx < MAP_W) {
-					if (map[ny][nx] == -1) {
-						wave.push_back(pair<int, int>(nx, ny));
-						map[ny][nx] = nstep;
-						if (nx == targetX && ny == targetY) {
-							find = false;
-							break;
-						}
+				if (map[ny][nx] == -1) {
+					wave.push_back(pair<int, int>(nx, ny));
+					map[ny][nx] = nstep;
+					if (nx == targetX && ny == targetY) {
+						find = false;
+						break;
 					}
 				}
 			}

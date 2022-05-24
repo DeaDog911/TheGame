@@ -39,6 +39,7 @@ public:
 	}
 
 	void takeWeapon(Weapon Weapon) {
+
 		weapon = Weapon;
 		weapon.active = true;
 		if (weapon.type == Melee) {
@@ -90,7 +91,18 @@ public:
 		legsTime = 0;
 	}
 
-	virtual bool checkCollisionWithMap(float Dx, float Dy) = 0;
+	void checkCollisionWithMap(float Dx, float Dy) {
+		for (int i = 0; i < obj.size(); i++) {
+			if (getRect().intersects(sf::FloatRect(obj[i].getAABB().left, obj[i].getAABB().top, obj[i].getAABB().width, obj[i].getAABB().height)))//проверяем пересечение игрока с объектом
+			{
+				if (obj[i].getName() == "solid")//если встретили препятствие
+				{
+					tmx::FloatRect tmxRect = obj[i].getAABB();
+					stopInFront(sf::FloatRect(tmxRect.left, tmxRect.top, tmxRect.width, tmxRect.height), Dx, Dy);
+				}
+			}
+		}
+	}
 
 	void move(float tempX, float tempY, float time) {
 		if (isMove) {
@@ -132,7 +144,7 @@ public:
 
 	void updateSprite() {
 		float shootDt = dt + 5;
-		float hitDt = dt ;
+		float hitDt = dt + 15;
 		if (isShoot) {
 			if (weapon.name == Shotgun) {
 				int i = int(shootTime / shootDt);
