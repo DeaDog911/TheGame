@@ -67,7 +67,7 @@ private:
 			escapeMenuText.setCharacterSize(40 / zoom_k);
 			escapeMenuText.setFillColor(sf::Color(255, 255, 255));
 			escapeMenuText.setOutlineColor(sf::Color(0, 0, 0));
-			escapeMenuText.setOutlineThickness(1);
+			escapeMenuText.setOutlineThickness(1.5);
 			escapeMenuTexts[i] = escapeMenuText;
 		}
 		escapeMenuTexts[0].setString("NEXT LEVEL");
@@ -228,11 +228,12 @@ public:
 		bulletHitSoundBuffer.loadFromFile("audio/bullet_hit.wav");
 		bulletHitSound.setBuffer(bulletHitSoundBuffer);
 
-		Image playerImage, legsImage;
+		Image playerImage, enemyLegsImage, playerLegsImage;
 		playerImage.loadFromFile("images/player_shotgun.png");
-		legsImage.loadFromFile("images/legs.png");
+		enemyLegsImage.loadFromFile("images/legs.png");
+		playerLegsImage.loadFromFile("images/legs_player.png");
 		Object playerObj = lvl.GetObject("player");
-		Player player(playerImage, legsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
+		Player player(playerImage, playerLegsImage, "Player", lvl, playerObj.getAABB().left, playerObj.getAABB().top, 32, 18);
 
 		sf::Image weaponsImage;
 		sf::Texture weaponsTexture;
@@ -258,7 +259,7 @@ public:
 
 		vector <Object> enemiesObj = lvl.GetObjectsWithType("enemy");
 		for (int i = 0; i < enemiesObj.size(); i++) {
-			Enemy* enemy = new Enemy(playerImage, legsImage, "Enemy", enemiesObj[i].getName(), lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
+			Enemy* enemy = new Enemy(playerImage, enemyLegsImage, "Enemy", enemiesObj[i].getName(), lvl, enemiesObj[i].getAABB().left, enemiesObj[i].getAABB().top, 32, 18, i);
 			string weaponString = enemiesObj[i].getProperties()[0].getStringValue();
 			Weapon wp(weaponsTexture, getWeaponType(weaponString), getEnumIndex(weaponString));
 			enemy->takeWeapon(wp);
@@ -651,10 +652,11 @@ public:
 							}
 						}
 					}
-
+					/*
 					if (enemy->getRect().intersects(player.getRect()) && player.life) {
 						player.stopInFront(enemy->getRect(), player.speedX, player.speedY);
 					}
+					*/
 
 					// «рение врага
 					rect.left = enemy->x; rect.top = enemy->y;
