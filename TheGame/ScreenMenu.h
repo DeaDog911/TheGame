@@ -258,7 +258,6 @@ public:
 								else {
 									saveLevel(0, "default");
 								}
-
 								return 1;
 							}
 							else if (menuTexts[1].getGlobalBounds().contains(pos.x, pos.y)) {

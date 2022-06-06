@@ -92,7 +92,7 @@ public:
 	}
 
 	int Run(sf::RenderWindow& window, int& map_i) {
-		backgroundMusic.play();
+		//backgroundMusic.play();
 
 		int res;
 		bool next = true;
@@ -120,8 +120,8 @@ public:
 	}
 
 	int startGame(RenderWindow& window, string map_file, bool next, int map_i) {
+		backgroundMusic.play();
 		string weapon = getSaveWeapon();
-		cout << "weapon: " << weapon << endl;
 		if (map_file == "level_1_1.tmx" || map_file == "level_2_1.tmx" ) {
 			MAP_H = 75;
 			MAP_W = 75;
@@ -762,7 +762,7 @@ public:
 						enemy->timeFromSeeYa += time;
 						enemy->rotate(player.x, player.y);
 						if (enemy->weapon.type == Gun) {
-							if (!enemy->isShoot && enemy->timeFromSeeYa >= 2000) {
+							if (!enemy->isShoot && enemy->timeFromSeeYa >= 1500) {
 								bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x, player.y, i));
 								if (enemy->weapon.name == Shotgun) {
 									bullets.push_back(new Bullet(bulletImage, "Bullet", lvl, enemy->x, enemy->y, 16, 16, player.x - 10, player.y - 10, i));

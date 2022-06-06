@@ -32,12 +32,13 @@ void saveLevel(int lvl, string weapon) {
 int getSaveLevel() {
     ifstream in(saves_path, ios::in);
     string line;
+    int lvl = -1;
     if (in.is_open()) {
         getline(in, line);
-        in.close();
-        return getLevelFromSave(line);
+        lvl = getLevelFromSave(line);
     }
-    return -1;
+    in.close();
+    return lvl;
 }
 
 string getSaveWeapon() {
