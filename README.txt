@@ -1,0 +1,1 @@
+Для запуска открыть "TheGame\TheGame.exe"
